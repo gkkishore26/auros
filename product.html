@@ -1,0 +1,411 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title id="page-title">AUROS - Premium Premiere Pro Presets & Motion Graphics</title>
+  <meta id="meta-description" name="description" content="Download free and premium Premiere Pro presets, preset packs, motion graphics templates, number animations, and creative video editing assets. Enjoy lifetime updates, expert support, and everything you need to create professional videos fast.">
+  <link id="canonical-link" rel="canonical" href="/product.html">
+  <meta id="og-title" property="og:title" content="AUROS – Premium Premiere Pro Presets & Motion Graphics">
+  <meta id="og-description" property="og:description" content="Download free and premium Premiere Pro presets, preset packs, motion graphics templates, number animations, and creative video editing assets. Enjoy lifetime updates, expert support, and everything you need to create professional videos fast.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/product.html">
+  <link href="css/theme.css" rel="stylesheet">
+  <link href="css/animations.css" rel="stylesheet">
+  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+</head>
+<body>
+  <a href="#main" style="position:absolute;left:1rem;top:0.5rem;z-index:100;background:#171717;color:white;padding:0.5rem 1rem;border-radius:0.375rem;transform:translateY(-100%);transition:transform 0.2s;" onfocus="this.style.transform='translateY(0)'" onblur="this.style.transform='translateY(-100%)'">Skip to content</a>
+
+  <div class="page-transition" id="pageTransition"></div>
+
+  <div id="app-header"></div>
+
+  <main id="main">
+    <!-- Breadcrumb -->
+    <div class="page-container">
+      <nav class="breadcrumbs" id="pdpBreadcrumb">
+        <a href="index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="collections/all.html" id="pdpCategoryLink">Category</a>
+        <span class="sep">/</span>
+        <span class="current" id="pdpBreadcrumbName">Product</span>
+      </nav>
+    </div>
+
+    <!-- Loading Skeleton -->
+    <div class="page-container" id="pdpSkeleton">
+      <div class="pdp-layout">
+        <div class="pdp-left">
+          <div class="skeleton" style="aspect-ratio:1;border-radius:0.75rem;width:100%;"></div>
+          <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+            <div class="skeleton" style="width:60px;height:60px;border-radius:0.5rem;"></div>
+            <div class="skeleton" style="width:60px;height:60px;border-radius:0.5rem;"></div>
+            <div class="skeleton" style="width:60px;height:60px;border-radius:0.5rem;"></div>
+            <div class="skeleton" style="width:60px;height:60px;border-radius:0.5rem;"></div>
+          </div>
+        </div>
+        <div class="pdp-right">
+          <div class="skeleton" style="height:1rem;width:50%;margin-bottom:1rem;border-radius:0.25rem;"></div>
+          <div class="skeleton" style="height:2rem;width:80%;margin-bottom:1rem;border-radius:0.25rem;"></div>
+          <div class="skeleton" style="height:1rem;width:30%;margin-bottom:1rem;border-radius:0.25rem;"></div>
+          <div class="skeleton" style="height:2.5rem;width:40%;margin-bottom:1.5rem;border-radius:0.25rem;"></div>
+          <div class="skeleton" style="height:1rem;width:90%;margin-bottom:0.5rem;border-radius:0.25rem;"></div>
+          <div class="skeleton" style="height:1rem;width:70%;margin-bottom:2rem;border-radius:0.25rem;"></div>
+          <div class="skeleton" style="height:3rem;width:100%;border-radius:3.75rem;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDP Content (hidden initially) -->
+    <div class="page-container" id="pdpContent" style="display:none;">
+      <div class="pdp-layout">
+        <!-- LEFT: Gallery -->
+        <div class="pdp-left">
+          <div class="pdp-gallery-main">
+            <img id="pdp-main-img" src="assets/images/placeholder.svg" alt="">
+            <button class="pdp-wishlist-btn" id="pdpWishlistBtn" title="Add to Wishlist">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            </button>
+          </div>
+          <div class="pdp-thumbnails" id="pdpThumbnails"></div>
+        </div>
+        <!-- RIGHT: Info -->
+        <div class="pdp-right">
+          <h1 class="pdp-title" id="pdpTitle"></h1>
+          <div class="pdp-rating" id="pdpRating"></div>
+          <div class="pdp-price-block" id="pdpPriceBlock"></div>
+          <div class="pdp-desc" id="pdpDesc"></div>
+          <div class="pdp-specs" id="pdpSpecs">
+            <h3>Specifications</h3>
+            <table class="pdp-specs-table" id="pdpSpecsTable"></table>
+          </div>
+          <div class="pdp-stock" id="pdpStock"></div>
+          <div class="pdp-qty">
+            <label>Quantity:</label>
+            <div class="qty-selector">
+              <button class="qty-btn" id="qtyMinus">−</button>
+              <input type="number" id="qtySelector" value="1" min="1" max="99" readonly>
+              <button class="qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+          <div class="pdp-actions">
+            <button class="btn btn-primary pdp-add-to-cart" id="pdpAddToCart">Add to Cart</button>
+            <button class="btn btn-secondary pdp-buy-now" id="pdpBuyNow">Buy Now</button>
+          </div>
+          <div class="pdp-delivery" id="pdpDelivery">
+            <div class="pdp-delivery-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Secure Payment</span>
+            </div>
+            <div class="pdp-delivery-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-4-7.5L23 4"/></svg>
+              <span>Instant Download</span>
+            </div>
+            <div class="pdp-delivery-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <span>Lifetime Updates</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="page-container" id="pdpReviewsSection" style="display:none;">
+      <section class="pdp-section">
+        <h2 class="pdp-section-title">Customer Reviews</h2>
+        <div class="pdp-reviews-summary" id="pdpReviewsSummary"></div>
+        <div class="pdp-reviews-list" id="pdpReviewsList"></div>
+      </section>
+    </div>
+
+    <!-- Related Products -->
+    <div class="page-container" id="pdpRelatedSection" style="display:none;">
+      <section class="products-section">
+        <div class="section-header">
+          <h2>Related Products</h2>
+        </div>
+        <div class="product-grid" id="related-grid"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <div id="app-overlay"></div>
+
+  <div id="app-mobile-menu"></div>
+
+  <div id="app-cart"></div>
+
+  <div id="app-search"></div>
+
+  <div id="app-cookie"></div>
+
+  <script src="js/store.js"></script>
+  <script src="js/components.js"></script>
+  <script>Layout.init('');</script>
+  <script src="js/auth.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/mobile-menu.js"></script>
+  <script src="js/effects.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      Store.init(function() {
+        var params = new URLSearchParams(window.location.search);
+        var slug = params.get('slug');
+        if (slug) slug = slug.trim();
+        if (!slug) { document.getElementById('pdpContent').innerHTML = '<div style="text-align:center;padding:4rem 1rem;"><h2>Product Not Found</h2><p style="color:rgb(var(--color-text-muted));margin-top:1rem;">The product you are looking for does not exist or has been removed.</p><a href="index.html" class="btn btn-primary" style="margin-top:2rem;">Back to Home</a></div>'; document.getElementById('pdpSkeleton').style.display = 'none'; return; }
+
+        var product = window.__PRODUCTS__.find(function(p) { return p.slug === slug; });
+        if (!product) { document.getElementById('pdpContent').innerHTML = '<div style="text-align:center;padding:4rem 1rem;"><h2>Product Not Found</h2><p style="color:rgb(var(--color-text-muted));margin-top:1rem;">The product you are looking for does not exist or has been removed.</p><a href="index.html" class="btn btn-primary" style="margin-top:2rem;">Back to Home</a></div>'; document.getElementById('pdpSkeleton').style.display = 'none'; return; }
+
+        // Update page meta
+        document.getElementById('page-title').textContent = product.name + ' - AUROS';
+        document.getElementById('og-title').setAttribute('content', product.name + ' - AUROS');
+        var truncatedDesc = product.description.length > 155 ? product.description.substring(0, 152) + '...' : product.description;
+        document.getElementById('meta-description').setAttribute('content', truncatedDesc);
+        document.getElementById('og-description').setAttribute('content', truncatedDesc);
+        document.getElementById('canonical-link').setAttribute('href', '/product.html?slug=' + product.slug);
+
+        // Breadcrumb
+        document.getElementById('pdpBreadcrumbName').textContent = product.name;
+        var catLink = document.getElementById('pdpCategoryLink');
+        var catSlug = product.collection || product.category.toLowerCase().replace(/\s+/g, '-');
+        catLink.href = 'collections/' + catSlug + '.html';
+        catLink.textContent = product.category;
+
+        // Title
+        document.getElementById('pdpTitle').textContent = product.name;
+
+        // Rating
+        var ratingHtml = '';
+        if (product.rating) {
+          var fullStars = Math.floor(product.rating);
+          var halfStar = product.rating % 1 >= 0.5;
+          for (var s = 0; s < 5; s++) {
+            if (s < fullStars) ratingHtml += '<svg class="pdp-star full" width="18" height="18" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+            else if (s === fullStars && halfStar) ratingHtml += '<svg class="pdp-star half" width="18" height="18" viewBox="0 0 24 24"><defs><linearGradient id="halfGrad"><stop offset="50%" stop-color="rgb(var(--color-rating))"/><stop offset="50%" stop-color="rgb(var(--color-border))"/></linearGradient></defs><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="url(#halfGrad)"/></svg>';
+            else ratingHtml += '<svg class="pdp-star empty" width="18" height="18" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+          }
+          document.getElementById('pdpRating').innerHTML = ratingHtml + ' <span class="pdp-rating-text">' + product.rating.toFixed(1) + ' <span class="pdp-rating-count">(' + (product.reviewCount || 0).toLocaleString('en-IN') + ' reviews)</span></span>';
+        }
+
+        // Price
+        var priceBlock = document.getElementById('pdpPriceBlock');
+        var prodCurr = product.currency || 'INR';
+        if (product.price === 0) {
+          priceBlock.innerHTML = '<div class="pdp-price-main free" data-amount="0" data-currency="' + prodCurr + '">' + (typeof Translator !== 'undefined' ? Translator.t('Free') : 'Free') + '</div>';
+        } else {
+          var priceHtml = '<div class="pdp-price-main" data-amount="' + product.price + '" data-currency="' + prodCurr + '">' + (typeof Locale !== 'undefined' ? Locale.formatPrice(product.price, prodCurr) : 'Rs. ' + product.price.toLocaleString('en-IN') + '.00') + '</div>';
+          if (product.comparePrice && product.comparePrice > product.price) {
+            var pct = Math.round((1 - product.price / product.comparePrice) * 100);
+            priceHtml = '<div class="pdp-price-main" data-amount="' + product.price + '" data-currency="' + prodCurr + '">' + (typeof Locale !== 'undefined' ? Locale.formatPrice(product.price, prodCurr) : 'Rs. ' + product.price.toLocaleString('en-IN') + '.00') + ' <span class="pdp-price-original" data-amount="' + product.comparePrice + '" data-currency="' + prodCurr + '">' + (typeof Locale !== 'undefined' ? Locale.formatPrice(product.comparePrice, prodCurr) : 'Rs. ' + product.comparePrice.toLocaleString('en-IN') + '.00') + '</span></div><div class="pdp-discount-badge">' + pct + '% OFF</div>';
+          }
+          priceBlock.innerHTML = priceHtml;
+        }
+
+        // Description
+        document.getElementById('pdpDesc').textContent = product.description;
+
+        // Specs
+        var specsTable = document.getElementById('pdpSpecsTable');
+        if (product.specs && product.specs.length > 0) {
+          product.specs.forEach(function(spec) {
+            var parts = spec.split(':');
+            var row = specsTable.insertRow();
+            if (parts.length > 1) {
+              row.innerHTML = '<td class="pdp-spec-label">' + parts[0].trim() + '</td><td class="pdp-spec-value">' + parts.slice(1).join(':').trim() + '</td>';
+            } else {
+              row.innerHTML = '<td colspan="2" class="pdp-spec-value">' + spec + '</td>';
+            }
+          });
+        } else {
+          document.getElementById('pdpSpecs').style.display = 'none';
+        }
+
+        // Stock
+        var stockEl = document.getElementById('pdpStock');
+        if (product.stock) {
+          stockEl.innerHTML = '<span class="pdp-instock"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ' + product.stock + '</span>';
+        }
+
+        // Gallery
+        var allImages = [];
+        if (product.images && product.images.length) allImages = product.images;
+        else if (product.image) allImages = [product.image];
+        else allImages = ['placeholder.svg'];
+        var mainImg = document.getElementById('pdp-main-img');
+        mainImg.src = resolveImageSrc(allImages[0]);
+        mainImg.alt = product.name;
+        var thumbs = document.getElementById('pdpThumbnails');
+        thumbs.innerHTML = '';
+        allImages.forEach(function(img, idx) {
+          var thumb = document.createElement('img');
+          thumb.src = resolveImageSrc(img);
+          thumb.className = idx === 0 ? 'active' : '';
+          thumb.addEventListener('click', function() {
+            mainImg.src = resolveImageSrc(img);
+            thumbs.querySelectorAll('img').forEach(function(t) { t.className = ''; });
+            thumb.className = 'active';
+          });
+          thumbs.appendChild(thumb);
+        });
+
+        // Wishlist button state
+        function updateWishlistBtn() {
+          var btn = document.getElementById('pdpWishlistBtn');
+          if (Wishlist.has(product.id)) {
+            btn.classList.add('active');
+            btn.querySelector('svg').setAttribute('fill', 'currentColor');
+            btn.title = 'Remove from Wishlist';
+          } else {
+            btn.classList.remove('active');
+            btn.querySelector('svg').setAttribute('fill', 'none');
+            btn.title = 'Add to Wishlist';
+          }
+        }
+        updateWishlistBtn();
+        document.getElementById('pdpWishlistBtn').addEventListener('click', function(e) {
+          e.preventDefault();
+          Auth.require(function() {
+            Wishlist.toggle(product);
+            updateWishlistBtn();
+          });
+        });
+
+        // Quantity
+        var qtyInput = document.getElementById('qtySelector');
+        document.getElementById('qtyMinus').addEventListener('click', function() {
+          var v = parseInt(qtyInput.value) || 1;
+          if (v > 1) qtyInput.value = v - 1;
+        });
+        document.getElementById('qtyPlus').addEventListener('click', function() {
+          var v = parseInt(qtyInput.value) || 1;
+          if (v < 99) qtyInput.value = v + 1;
+        });
+
+        // Add to Cart
+        document.getElementById('pdpAddToCart').addEventListener('click', function() {
+          Auth.require(function() {
+            Cart.add({
+              id: product.id,
+              slug: product.slug,
+              name: product.name,
+              price: product.price,
+              image: product.image || (product.images ? product.images[0] : 'placeholder.svg'),
+              quantity: parseInt(qtyInput.value) || 1,
+              currency: product.currency || 'INR'
+            });
+          });
+        });
+
+        // Buy Now
+        document.getElementById('pdpBuyNow').addEventListener('click', function() {
+          buyNow(product);
+        });
+
+        // Reviews
+        if (product.reviews && product.reviews.length > 0) {
+          document.getElementById('pdpReviewsSection').style.display = '';
+          var summaryEl = document.getElementById('pdpReviewsSummary');
+          var total = product.reviews.length;
+          var avg = product.reviews.reduce(function(s, r) { return s + r.rating; }, 0) / total;
+          var starsHtml = '';
+          for (var si = 0; si < 5; si++) {
+            if (si < Math.floor(avg)) starsHtml += '<svg class="pdp-star full" width="20" height="20" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+            else starsHtml += '<svg class="pdp-star empty" width="20" height="20" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+          }
+          summaryEl.innerHTML = '<div class="pdp-review-avg"><span class="pdp-review-num">' + avg.toFixed(1) + '</span>' + starsHtml + '<span class="pdp-review-total">' + total + ' review' + (total > 1 ? 's' : '') + '</span></div>';
+
+          var listEl = document.getElementById('pdpReviewsList');
+          product.reviews.forEach(function(r) {
+            var revStars = '';
+            for (var ri = 0; ri < 5; ri++) {
+              if (ri < r.rating) revStars += '<svg class="pdp-star full" width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+              else revStars += '<svg class="pdp-star empty" width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+            }
+            var div = document.createElement('div');
+            div.className = 'pdp-review-item';
+            div.innerHTML = '<div class="pdp-review-header"><strong>' + r.name + '</strong>' + revStars + '<span class="pdp-review-date">' + r.date + '</span>' + (r.verified ? '<span class="pdp-review-verified">Verified Purchase</span>' : '') + '</div><p class="pdp-review-comment">' + r.comment + '</p>';
+            listEl.appendChild(div);
+          });
+        }
+
+        // Recently viewed
+        var recentlyViewed = JSON.parse(localStorage.getItem('ab_recently_viewed')) || [];
+        recentlyViewed.unshift(product.id);
+        localStorage.setItem('ab_recently_viewed', JSON.stringify(recentlyViewed.slice(0, 10)));
+
+        // Related Products
+        var related = window.__PRODUCTS__.filter(function(p) { return p.category === product.category && p.id !== product.id; }).slice(0, 4);
+        if (related.length > 0) {
+          document.getElementById('pdpRelatedSection').style.display = '';
+          var grid = document.getElementById('related-grid');
+          grid.classList.add('stagger-fade');
+          related.forEach(function(p) {
+            var priceText = p.price === 0 ? 'Free' : 'Rs. ' + p.price.toLocaleString('en-IN') + '.00';
+            var priceClass = p.price === 0 ? 'free' : '';
+            var pCurr = p.currency || 'INR';
+            var card = document.createElement('div');
+            card.className = 'product-card';
+            card.setAttribute('data-quickview', p.slug);
+            card.innerHTML = [
+              '<div class="product-card-image">',
+              '<img src="' + resolveImageSrc(resolveImage(p)) + '" alt="' + p.name + ' - AUROS Premium Premiere Pro ' + p.category + '" loading="lazy">',
+              '</div>',
+              '<div class="product-card-body">',
+              '<div class="product-card-title"><a href="product.html?slug=' + p.slug + '">' + p.name + '</a></div>',
+              '<div class="product-card-price ' + priceClass + '" data-amount="' + p.price + '" data-currency="' + pCurr + '">' + priceText + '</div>',
+              '</div>',
+              '<button class="btn btn-primary btn-sm btn-full add-to-cart-btn"',
+              'data-id="' + p.id + '" data-slug="' + p.slug + '"',
+              'data-name="' + p.name + '" data-price="' + p.price + '"',
+              'data-currency="' + (p.currency || 'INR') + '"',
+              'data-image="' + (p.image || (p.images ? p.images[0] : 'placeholder.svg')) + '">Add to cart</button>'
+            ].join('');
+            grid.appendChild(card);
+          });
+        }
+
+        // Hide skeleton, show content
+        document.getElementById('pdpSkeleton').style.display = 'none';
+        document.getElementById('pdpContent').style.display = '';
+      });
+    });
+  </script>
+  <div class="qv-overlay" id="qvOverlay">
+    <div class="qv-modal">
+      <button class="qv-close" id="qvClose">&times;</button>
+      <div class="qv-layout">
+        <div class="qv-gallery">
+          <img id="qvImage" src="assets/images/placeholder.svg" alt="">
+          <div class="qv-gallery-thumbs" id="qvThumbs"></div>
+        </div>
+        <div class="qv-info">
+          <h2 id="qvName"></h2>
+          <div id="qvPrice" class="qv-price"></div>
+          <div id="qvCompare" class="qv-compare"></div>
+          <div id="qvColors" class="qv-colors"></div>
+          <div id="qvDesc" class="qv-desc"></div>
+          <ul id="qvFeatures" class="qv-features"></ul>
+          <div class="qv-actions">
+            <button class="btn btn-primary" id="qvAddToCart">Add to Cart</button>
+          </div>
+          <div class="qv-view-link"><a id="qvViewLink" href="#">View Full Details &rarr;</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="app-scroll-top"></div>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title>AUROS - Premium Premiere Pro Presets & Motion Graphics</title>
+  <meta name="description" content="Download 60+ premium and free Premiere Pro presets, motion graphics templates, project files, and video editing assets. Lifetime updates, instant download.">
+  <link rel="canonical" href="/">
+  <meta property="og:title" content="AUROS – Premium Premiere Pro Presets & Motion Graphics">
+  <meta property="og:description" content="Download free and premium Premiere Pro presets, preset packs, motion graphics templates, number animations, and creative video editing assets. Enjoy lifetime updates, expert support, and everything you need to create professional videos fast.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/">
+  <link href="css/theme.css" rel="stylesheet">
+  <link href="css/animations.css" rel="stylesheet">
+  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    .category-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.75rem;
+    }
+    .category-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      padding: 1.25rem 0.75rem;
+      text-decoration: none;
+      border-radius: 0.75rem;
+      font-size: 0.8125rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .category-btn:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+    .category-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+      pointer-events: none;
+      transition: none;
+    }
+    .category-btn:hover::after {
+      animation: shimmer 0.6s ease-out;
+    }
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    [data-theme="dark"] .category-btn:hover {
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5), 0 0 24px -8px rgba(255, 255, 255, 0.06);
+    }
+    @media (max-width: 540px) {
+      .category-nav {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 0.5rem;
+      }
+      .category-btn {
+        padding: 1rem 0.5rem;
+        font-size: 0.75rem;
+      }
+      .category-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-transition" id="pageTransition"></div>
+  <div id="dots-container" style="position:fixed;inset:0;z-index:-1;pointer-events:none;"></div>
+  <a href="#main" style="position:absolute;left:1rem;top:0.5rem;z-index:100;background:#171717;color:white;padding:0.5rem 1rem;border-radius:0.375rem;transform:translateY(-100%);transition:transform 0.2s;" onfocus="this.style.transform='translateY(0)'" onblur="this.style.transform='translateY(-100%)'">Skip to content</a>
+
+  <div id="app-header"></div>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero-section">
+      <div class="page-container">
+        <div class="hero-content">
+          <div class="hero-tagline" id="tagline"><span id="tagline-text"></span><span class="tagline-cursor">|</span></div>
+          <h1 class="hero-title" id="heroTitle">Premium E-Products for Creators & Professionals</h1>
+          <p class="hero-subtitle">
+            <span class="word-reveal">Professional</span>
+            <span class="word-reveal">presets,</span>
+            <span class="word-reveal">motion</span>
+            <span class="word-reveal">graphics,</span>
+            <span class="word-reveal">and</span>
+            <span class="word-reveal">project</span>
+            <span class="word-reveal">files</span>
+            <span class="word-reveal">for</span>
+            <span class="word-reveal"><em>editors</em></span>
+            <span class="word-reveal">who</span>
+            <span class="word-reveal">demand</span>
+            <span class="word-reveal">more.</span>
+          </p>
+          <div class="hero-actions">
+            <a href="collections/best-sellers.html" class="btn btn-primary">Shop Best Sellers</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY NAVIGATION -->
+    <section class="products-section">
+      <div class="page-container">
+        <div class="section-header reveal">
+          <h2>Browse Categories</h2>
+          <p>Find the perfect assets for your next project</p>
+        </div>
+        <nav class="category-nav" aria-label="Product categories">
+          <a href="collections/presets.html" class="btn btn-primary category-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span style="font-weight:600;">Presets</span>
+          </a>
+          <a href="collections/motion-graphics.html" class="btn btn-primary category-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            <span style="font-weight:600;">Motion Graphics</span>
+          </a>
+          <a href="collections/project-files.html" class="btn btn-primary category-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span style="font-weight:600;">Project Files</span>
+          </a>
+          <a href="collections/free-assets.html" class="btn btn-primary category-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+            <span style="font-weight:600;">Free Assets</span>
+          </a>
+          <a href="collections/sound-effects.html" class="btn btn-primary category-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span style="font-weight:600;">Sound Effects</span>
+          </a>
+          <a href="collections/best-sellers.html" class="btn btn-primary category-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span style="font-weight:600;">Best Sellers</span>
+          </a>
+          <a href="collections/all.html" class="btn btn-primary category-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span style="font-weight:600;">All Products</span>
+          </a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- BEST SELLERS -->
+    <section class="products-section" id="best-sellers-section">
+      <div class="page-container">
+        <div class="section-header reveal">
+          <h2>Best Sellers</h2>
+          <p>Our most popular products, trusted by editors worldwide.</p>
+          <a href="collections/best-sellers.html" class="section-header-link">View all best sellers</a>
+        </div>
+        <div class="product-grid" id="bestsellers-grid"></div>
+      </div>
+    </section>
+
+    <!-- PRESETS -->
+    <section class="products-section" id="presets">
+      <div class="page-container">
+        <div class="section-header reveal">
+          <h2>Presets</h2>
+          <a href="collections/presets.html" class="section-header-link">View all presets</a>
+        </div>
+        <div class="product-grid" id="presets-grid"></div>
+      </div>
+    </section>
+
+    <!-- MOTION GRAPHIC TEMPLATES -->
+    <section class="products-section" id="motion-graphics">
+      <div class="page-container">
+        <div class="section-header reveal">
+          <h2>Motion Graphic Templates</h2>
+          <a href="collections/motion-graphics.html" class="section-header-link">View all templates</a>
+        </div>
+        <div class="product-grid" id="motion-grid"></div>
+      </div>
+    </section>
+
+    <!-- TRUST STATS -->
+    <section class="trust-stats reveal" id="stats-section">
+      <div class="page-container">
+        <div class="stats-grid">
+          <div class="stat-item reveal" style="transition-delay:0.1s;">
+            <div class="stat-value"><span data-target="28" data-suffix="+">0+</span></div>
+            <div class="stat-label">Products</div>
+          </div>
+          <div class="stat-item reveal" style="transition-delay:0.2s;">
+            <div class="stat-value"><span data-target="12000" data-suffix="+">0+</span></div>
+            <div class="stat-label">Happy Customers</div>
+          </div>
+          <div class="stat-item reveal" style="transition-delay:0.3s;">
+            <div class="stat-value"><span data-target="4" data-suffix=".9">0</span> <span style="font-size:1rem;">★</span></div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+          <div class="stat-item reveal" style="transition-delay:0.4s;">
+            <div class="stat-value"><span data-target="100" data-suffix="%">0%</span></div>
+            <div class="stat-label">Satisfaction</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter-section reveal">
+      <div class="page-container">
+        <h3 class="newsletter-title">Get exclusive offers</h3>
+        <form class="newsletter-form" onsubmit="event.preventDefault();alert('Thank you for subscribing!');this.querySelector('input').value=''">
+          <input type="email" placeholder="Enter your email" required aria-label="Email address">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <!-- DRAWER OVERLAY -->
+  <div id="app-overlay"></div>
+
+  <div id="app-mobile-menu"></div>
+
+  <div id="app-cart"></div>
+
+  <div id="app-search"></div>
+
+  <div id="app-cookie"></div>
+
+  <script src="js/store.js"></script>
+  <script src="js/components.js"></script>
+  <script>Layout.init('');</script>
+  <script src="js/auth.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/three-dots.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/mobile-menu.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      Store.init(function() {
+
+        function renderProductGrid(containerId, filterFn, limit) {
+          var container = document.getElementById(containerId);
+          if (!container || !window.__PRODUCTS__) return;
+          container.classList.add('stagger-fade');
+          var products = window.__PRODUCTS__.filter(filterFn).slice(0, limit || 99);
+          products.forEach(function(product) {
+            var img = product.image || (product.images ? product.images[0] : null);
+            var imageSrc = img && (img.indexOf('://') > -1 || img.indexOf('//') === 0 || img.indexOf('data:') === 0) ? img : 'assets/images/' + (img || 'placeholder.svg');
+            var priceText = product.price === 0 ? 'Free' : 'Rs. ' + product.price.toLocaleString('en-IN') + '.00';
+            var priceClass = product.price === 0 ? 'free' : '';
+            var badgeHtml = '';
+            if (product.badge === 'Best Seller') badgeHtml = '<span class="product-card-badge badge-best-seller">Best Seller</span>';
+            else if (product.badge === 'Popular') badgeHtml = '<span class="product-card-badge badge-popular">Popular</span>';
+            else if (product.badge === 'Free') badgeHtml = '<span class="product-card-badge badge-free">Free</span>';
+            else if (product.badge === 'Demo') badgeHtml = '<span class="product-card-badge badge-demo">Demo</span>';
+            var card = document.createElement('div');
+            card.className = 'product-card';
+            card.setAttribute('data-quickview', product.slug);
+            card.innerHTML =
+              '<div class="product-card-image">' +
+                '<img src="' + imageSrc + '" alt="' + product.name + ' - AUROS" loading="lazy">' +
+                badgeHtml +
+              '</div>' +
+              '<div class="product-card-body">' +
+                '<div class="product-card-title"><a href="product.html?slug=' + product.slug + '">' + product.name + '</a></div>' +
+                '<div class="product-card-price ' + priceClass + '" data-amount="' + product.price + '" data-currency="' + (product.currency || 'INR') + '">' + priceText + '</div>' +
+              '</div>' +
+              '<button class="btn btn-primary btn-sm btn-full add-to-cart-btn"' +
+                ' data-id="' + product.id + '" data-slug="' + product.slug + '"' +
+' data-name="' + product.name + '" data-price="' + product.price + '"' +
+                 ' data-currency="' + (product.currency || 'INR') + '"' +
+                 ' data-image="' + (product.image || 'placeholder.svg') + '">Add to cart</button>';
+            container.appendChild(card);
+          });
+        }
+
+        renderProductGrid('bestsellers-grid', function(p) { return p.badge === 'Best Seller'; }, 4);
+        renderProductGrid('presets-grid', function(p) { return p.collection === 'presets'; }, 4);
+        renderProductGrid('motion-grid', function(p) { return p.collection === 'motion-graphics'; }, 4);
+
+      }); /* end Store.init */
+
+      /* Stats Counter */
+      (function() {
+        var counted = false;
+        var statsSection = document.getElementById('stats-section');
+        if (!statsSection) return;
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting && !counted) {
+              counted = true;
+              var targets = statsSection.querySelectorAll('[data-target]');
+              targets.forEach(function(el) {
+                var target = parseInt(el.getAttribute('data-target'));
+                var suffix = el.getAttribute('data-suffix') || '';
+                var current = 0;
+                var step = Math.ceil(target / 60);
+                var interval = setInterval(function() {
+                  current += step;
+                  if (current >= target) {
+                    current = target;
+                    clearInterval(interval);
+                  }
+                  el.textContent = current + suffix;
+                }, 25);
+              });
+              observer.unobserve(statsSection);
+            }
+          });
+        }, { threshold: 0.5 });
+        observer.observe(statsSection);
+      })();
+    });
+  </script>
+  <div id="app-scroll-top"></div>
+
+  <div class="qv-overlay" id="qvOverlay">
+    <div class="qv-modal">
+      <button class="qv-close" id="qvClose">&times;</button>
+      <div class="qv-layout">
+        <div class="qv-gallery">
+          <img id="qvImage" src="assets/images/placeholder.svg" alt="">
+          <div class="qv-gallery-thumbs" id="qvThumbs"></div>
+        </div>
+        <div class="qv-info">
+          <h2 id="qvName"></h2>
+          <div id="qvPrice" class="qv-price"></div>
+          <div id="qvCompare" class="qv-compare"></div>
+          <div id="qvColors" class="qv-colors"></div>
+          <div id="qvDesc" class="qv-desc"></div>
+          <ul id="qvFeatures" class="qv-features"></ul>
+          <div class="qv-actions">
+            <button class="btn btn-primary" id="qvAddToCart">Add to Cart</button>
+          </div>
+          <div class="qv-view-link"><a id="qvViewLink" href="#">View Full Details &rarr;</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title>My Account - AUROS</title>
+  <meta name="description" content="Manage your AUROS account, view orders, wishlist, and saved addresses.">
+  <link rel="canonical" href="/account.html">
+  <link href="css/theme.css" rel="stylesheet">
+  <link href="css/animations.css" rel="stylesheet">
+  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+</head>
+<body>
+  <a href="#main" style="position:absolute;left:1rem;top:0.5rem;z-index:100;background:#171717;color:white;padding:0.5rem 1rem;border-radius:0.375rem;transform:translateY(-100%);transition:transform 0.2s;" onfocus="this.style.transform='translateY(0)'" onblur="this.style.transform='translateY(-100%)'">Skip to content</a>
+  <div class="page-transition" id="pageTransition"></div>
+  <div id="app-header"></div>
+  <main id="main">
+    <div class="page-container">
+      <nav class="breadcrumbs"><a href="index.html">Home</a><span class="sep">/</span><span class="current">My Account</span></nav>
+      <div class="account-layout" id="accountLayout">
+        <!-- Sidebar -->
+        <aside class="account-sidebar" id="accountSidebar">
+          <div class="account-user" id="accountUserInfo"></div>
+          <nav class="account-nav">
+            <button class="account-nav-item active" data-section="profile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</button>
+            <button class="account-nav-item" data-section="orders"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Orders</button>
+            <button class="account-nav-item" data-section="wishlist"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg> Wishlist</button>
+            <button class="account-nav-item" data-section="addresses"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Saved Addresses</button>
+          </nav>
+        </aside>
+        <!-- Content -->
+        <div class="account-content">
+          <div class="account-section active" id="section-profile">
+            <h2 class="account-section-title">My Profile</h2>
+            <div class="account-profile-form" id="profileForm">
+              <div class="account-field"><label>Name</label><input type="text" id="profileName" class="account-input"></div>
+              <div class="account-field"><label>Email</label><input type="email" id="profileEmail" class="account-input" readonly></div>
+              <div class="account-stripe" style="margin-bottom:1rem;padding:1rem;border:1px solid rgb(var(--color-border));border-radius:0.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.02);">
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:#635BFF;"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 18c-4.411 0-8-4.411-8-8s3.589-8 8-8 8 4.411 8 8-3.589 8-8 8z"/></svg>
+                  <span id="stripeStatus" style="font-size:0.875rem;font-weight:500;">Stripe Not Connected</span>
+                </div>
+                <button id="stripeConnectBtn" class="btn btn-secondary btn-sm">Connect</button>
+              </div>
+              <button class="btn btn-primary" id="profileSaveBtn">Save Changes</button>
+            </div>
+          </div>
+          <div class="account-section" id="section-orders">
+            <h2 class="account-section-title">My Orders</h2>
+            <div id="ordersList"><p style="color:rgb(var(--color-text-muted));">No orders yet.</p></div>
+          </div>
+          <div class="account-section" id="section-wishlist">
+            <h2 class="account-section-title">Wishlist</h2>
+            <div id="wishlistItems"><p style="color:rgb(var(--color-text-muted));">Your wishlist is empty.</p></div>
+          </div>
+          <div class="account-section" id="section-addresses">
+            <h2 class="account-section-title">Saved Addresses</h2>
+            <div id="addressesList"><p style="color:rgb(var(--color-text-muted));">No saved addresses.</p></div>
+            <button class="btn btn-primary btn-sm" id="addAddressBtn" style="margin-top:1rem;">+ Add Address</button>
+            <div id="addressForm" style="display:none;margin-top:1rem;border:1px solid rgb(var(--color-border)/0.5);padding:1.25rem;border-radius:0.75rem;">
+              <div class="account-field"><label>Full Name</label><input type="text" id="addrName" class="account-input"></div>
+              <div class="account-field"><label>Phone</label><input type="tel" id="addrPhone" class="account-input"></div>
+              <div class="account-field"><label>Address</label><input type="text" id="addrLine" class="account-input"></div>
+              <div class="account-field"><label>City</label><input type="text" id="addrCity" class="account-input"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="account-field"><label>State</label><input type="text" id="addrState" class="account-input"></div>
+                <div class="account-field"><label>Pincode</label><input type="text" id="addrPincode" class="account-input"></div>
+              </div>
+              <div style="display:flex;gap:0.75rem;margin-top:1rem;">
+                <button class="btn btn-primary btn-sm" id="addrSaveBtn">Save Address</button>
+                <button class="btn btn-secondary btn-sm" id="addrCancelBtn">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Guest notice -->
+      <div id="accountGuestNotice" style="display:none;text-align:center;padding:4rem 1rem;">
+        <h2>Please log in</h2>
+        <p style="color:rgb(var(--color-text-muted));margin-top:0.75rem;margin-bottom:1.5rem;">You need to be logged in to view your account.</p>
+        <button class="btn btn-primary" id="accountLoginBtn">Log In</button>
+      </div>
+    </div>
+  </main>
+  <div id="app-footer"></div>
+  <div id="app-overlay"></div>
+  <div id="app-mobile-menu"></div>
+  <div id="app-cart"></div>
+  <div id="app-search"></div>
+  <div id="app-cookie"></div>
+  <script src="js/store.js"></script>
+  <script src="js/components.js"></script>
+  <script>Layout.init('');</script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      Store.init(function() {
+        function loadAccount() {
+          if (!Auth.isLoggedIn()) {
+            document.getElementById('accountLayout').style.display = 'none';
+            document.getElementById('accountGuestNotice').style.display = '';
+            return;
+          }
+          document.getElementById('accountLayout').style.display = 'grid';
+          document.getElementById('accountGuestNotice').style.display = 'none';
+          var user = Auth.getCurrentUser();
+          document.getElementById('accountUserInfo').innerHTML = '<div class="account-avatar">' + (user.name ? user.name.split(' ').map(function(w){return w[0]}).join('').toUpperCase().slice(0,2) : 'U') + '</div><div class="account-user-detail"><strong>' + user.name + '</strong><span>' + user.email + '</span></div>';
+          document.getElementById('profileName').value = user.name || '';
+          document.getElementById('profileEmail').value = user.email || '';
+
+          // Profile save
+          document.getElementById('profileSaveBtn').onclick = function() {
+            var newName = document.getElementById('profileName').value.trim();
+            if (!newName) return;
+            var users = JSON.parse(localStorage.getItem('ab_users')) || [];
+            var idx = users.findIndex(function(u){return u.email === user.email;});
+            if (idx > -1) { users[idx].name = newName; localStorage.setItem('ab_users', JSON.stringify(users)); }
+            Auth.currentUser.name = newName;
+            Auth.saveSession();
+            if (typeof Toast !== 'undefined') Toast.show('Profile updated');
+            loadAccount();
+          };
+
+          // Orders
+          var orders = JSON.parse(localStorage.getItem('ab_orders')) || [];
+          var ordersEl = document.getElementById('ordersList');
+          if (orders.length === 0) {
+            ordersEl.innerHTML = '<p style="color:rgb(var(--color-text-muted));">No orders yet.</p>';
+          } else {
+              var html = '';
+            orders.forEach(function(o) {
+              html += '<div class="account-order"><div class="account-order-header"><strong>Order #' + o.id + '</strong><span class="account-order-date">' + o.date + '</span><span class="account-order-status">' + o.status + '</span></div><div class="account-order-items">';
+              (o.items || []).forEach(function(item) {
+                var fullProd = window.__PRODUCTS__ ? window.__PRODUCTS__.find(function(p) { return p.id === item.id; }) : null;
+                var downloadBtn = '';
+                if (fullProd && fullProd.productFile) {
+                  downloadBtn = '<a href="' + fullProd.productFile.data + '" download="' + fullProd.productFile.name + '" class="btn btn-sm" style="font-size:0.75rem;padding:0.25rem 0.5rem;text-decoration:none;background:rgb(var(--color-base-button));color:rgb(var(--color-base-button-text));border-radius:0.25rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:0.375rem;margin-left:0.5rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</a>';
+                }
+                var itemCurr = item.currency || 'INR';
+                var itemTotal = typeof Locale !== 'undefined' ? Locale.formatPrice(item.price * item.quantity, itemCurr) : 'Rs. ' + (item.price * item.quantity).toLocaleString('en-IN');
+                html += '<div class="account-order-item"><span>' + item.name + '</span><span>x' + item.quantity + '</span><span>' + itemTotal + '</span>' + downloadBtn + '</div>';
+              });
+              var orderTotal = typeof Locale !== 'undefined' ? Locale.formatPrice(o.total) : 'Rs. ' + o.total.toLocaleString('en-IN') + '.00';
+              html += '</div><div class="account-order-total"><strong>Total: ' + orderTotal + '</strong></div></div>';
+            });
+            ordersEl.innerHTML = html;
+          }
+
+          // Wishlist
+          Wishlist.init();
+          var wishlistEl = document.getElementById('wishlistItems');
+          if (Wishlist.items.length === 0) {
+            wishlistEl.innerHTML = '<p style="color:rgb(var(--color-text-muted));">Your wishlist is empty.</p>';
+          } else {
+            var grid = document.createElement('div');
+            grid.className = 'product-grid';
+            Wishlist.items.forEach(function(item) {
+              var p = Store.getById(item.id) || item;
+              var priceText = p.price === 0 ? 'Free' : 'Rs. ' + p.price.toLocaleString('en-IN') + '.00';
+              var card = document.createElement('div');
+              card.className = 'product-card';
+              card.innerHTML = [
+                '<div class="product-card-image"><img src="' + resolveImageSrc(p.image || 'placeholder.svg') + '" alt="' + p.name + '" loading="lazy"></div>',
+                '<div class="product-card-body">',
+                '<div class="product-card-title"><a href="product.html?slug=' + p.slug + '">' + p.name + '</a></div>',
+                '<div class="product-card-price" data-amount="' + p.price + '" data-currency="' + (p.currency || 'INR') + '">' + priceText + '</div>',
+                '</div>',
+                '<button class="btn btn-primary btn-sm btn-full add-to-cart-btn"',
+                'data-id="' + p.id + '" data-slug="' + p.slug + '"',
+'data-name="' + p.name + '" data-price="' + p.price + '"',
+                'data-currency="' + (p.currency || 'INR') + '"',
+                'data-image="' + (p.image || 'placeholder.svg') + '">Add to cart</button>'
+              ].join('');
+              grid.appendChild(card);
+            });
+            wishlistEl.innerHTML = '';
+            wishlistEl.appendChild(grid);
+          }
+
+          // Addresses
+          var addrs = JSON.parse(localStorage.getItem('ab_addresses')) || [];
+          var addrEl = document.getElementById('addressesList');
+          if (addrs.length === 0) {
+            addrEl.innerHTML = '<p style="color:rgb(var(--color-text-muted));">No saved addresses.</p>';
+          } else {
+            var addrHtml = '';
+            addrs.forEach(function(a, i) {
+              addrHtml += '<div class="account-address"><div class="account-address-detail"><strong>' + a.name + '</strong> &mdash; ' + a.phone + '<br>' + a.line + ', ' + a.city + ', ' + a.state + ' - ' + a.pincode + '</div><button class="btn btn-secondary btn-sm" data-addr-delete="' + i + '">Delete</button></div>';
+            });
+            addrEl.innerHTML = addrHtml;
+            addrEl.querySelectorAll('[data-addr-delete]').forEach(function(btn) {
+              btn.addEventListener('click', function() {
+                var idx = parseInt(this.getAttribute('data-addr-delete'));
+                var list = JSON.parse(localStorage.getItem('ab_addresses')) || [];
+                list.splice(idx, 1);
+                localStorage.setItem('ab_addresses', JSON.stringify(list));
+                loadAccount();
+              });
+            });
+          }
+
+          // Address form
+          document.getElementById('addAddressBtn').onclick = function() {
+            document.getElementById('addressForm').style.display = '';
+          };
+          document.getElementById('addrCancelBtn').onclick = function() {
+            document.getElementById('addressForm').style.display = 'none';
+            document.querySelectorAll('#addressForm input').forEach(function(i){i.value='';});
+          };
+          document.getElementById('addrSaveBtn').onclick = function() {
+            var a = {name: document.getElementById('addrName').value.trim(), phone: document.getElementById('addrPhone').value.trim(), line: document.getElementById('addrLine').value.trim(), city: document.getElementById('addrCity').value.trim(), state: document.getElementById('addrState').value.trim(), pincode: document.getElementById('addrPincode').value.trim()};
+            if (!a.name || !a.line || !a.city) { if (typeof Toast !== 'undefined') Toast.show('Please fill required fields'); return; }
+            var list = JSON.parse(localStorage.getItem('ab_addresses')) || [];
+            list.push(a);
+            localStorage.setItem('ab_addresses', JSON.stringify(list));
+            document.getElementById('addressForm').style.display = 'none';
+            document.querySelectorAll('#addressForm input').forEach(function(i){i.value='';});
+            if (typeof Toast !== 'undefined') Toast.show('Address saved');
+            loadAccount();
+          };
+        }
+
+        loadAccount();
+        document.getElementById('accountLoginBtn').addEventListener('click', function() { sessionStorage.setItem('ab_auth_return', window.location.href); window.location.href = 'login.html'; });
+      });
+    });
+  </script>
+  <script src="js/toast.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/mobile-menu.js"></script>
+  <script src="js/effects.js"></script>
+  <div class="qv-overlay" id="qvOverlay">
+    <div class="qv-modal">
+      <button class="qv-close" id="qvClose">&times;</button>
+      <div class="qv-layout">
+        <div class="qv-gallery"><img id="qvImage" src="assets/images/placeholder.svg" alt=""><div class="qv-gallery-thumbs" id="qvThumbs"></div></div>
+        <div class="qv-info"><h2 id="qvName"></h2><div id="qvPrice" class="qv-price"></div><div id="qvCompare" class="qv-compare"></div><div id="qvColors" class="qv-colors"></div><div id="qvDesc" class="qv-desc"></div><ul id="qvFeatures" class="qv-features"></ul><div class="qv-actions"><button class="btn btn-primary" id="qvAddToCart">Add to Cart</button></div><div class="qv-view-link"><a id="qvViewLink" href="#">View Full Details &rarr;</a></div></div>
+      </div>
+    </div>
+  </div>
+  <div id="app-scroll-top"></div>
+</body>
+</html>

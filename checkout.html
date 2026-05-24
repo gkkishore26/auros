@@ -1,0 +1,321 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title>Checkout - AUROS</title>
+  <meta name="description" content="Complete your purchase of premium Premiere Pro presets and motion graphics.">
+  <link rel="canonical" href="/checkout.html">
+  <link href="css/theme.css" rel="stylesheet">
+  <link href="css/animations.css" rel="stylesheet">
+  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+</head>
+<body>
+  <a href="#main" style="position:absolute;left:1rem;top:0.5rem;z-index:100;background:#171717;color:white;padding:0.5rem 1rem;border-radius:0.375rem;transform:translateY(-100%);transition:transform 0.2s;" onfocus="this.style.transform='translateY(0)'" onblur="this.style.transform='translateY(-100%)'">Skip to content</a>
+  <div class="page-transition" id="pageTransition"></div>
+  <div id="app-header"></div>
+  <main id="main">
+    <section class="page-banner">
+      <div class="page-container">
+        <h1>Checkout</h1>
+      </div>
+    </section>
+    <section class="page-section">
+      <div class="page-container">
+        <div id="checkout-empty" style="display:none;text-align:center;padding:3rem 0;">
+          <p style="font-size:1.125rem;color:rgb(var(--color-text-muted));margin-bottom:1.5rem;">Your cart is empty.</p>
+          <a href="collections/all.html" class="btn btn-primary">Browse products</a>
+        </div>
+        <div id="checkout-form" style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+          <div>
+            <h2 style="font-size:1.25rem;font-weight:600;margin-bottom:1.5rem;">Shipping details</h2>
+            <div style="margin-bottom:1rem;">
+              <label style="font-size:0.875rem;font-weight:500;margin-bottom:0.5rem;display:block;">Full name</label>
+              <input type="text" id="checkout-name" style="width:100%;padding:0.75rem;border:1px solid rgb(var(--color-border));border-radius:0.375rem;background:transparent;color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:1rem;">
+              <label style="font-size:0.875rem;font-weight:500;margin-bottom:0.5rem;display:block;">Email</label>
+              <input type="email" id="checkout-email" style="width:100%;padding:0.75rem;border:1px solid rgb(var(--color-border));border-radius:0.375rem;background:transparent;color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:1rem;">
+              <label style="font-size:0.875rem;font-weight:500;margin-bottom:0.5rem;display:block;">Phone</label>
+              <input type="tel" id="checkout-phone" style="width:100%;padding:0.75rem;border:1px solid rgb(var(--color-border));border-radius:0.375rem;background:transparent;color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:1rem;">
+              <label style="font-size:0.875rem;font-weight:500;margin-bottom:0.5rem;display:block;">Address</label>
+              <textarea id="checkout-address" rows="3" style="width:100%;padding:0.75rem;border:1px solid rgb(var(--color-border));border-radius:0.375rem;background:transparent;color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;resize:vertical;font-family:inherit;"></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+              <div>
+                <label style="font-size:0.875rem;font-weight:500;margin-bottom:0.5rem;display:block;">City</label>
+                <input type="text" id="checkout-city" style="width:100%;padding:0.75rem;border:1px solid rgb(var(--color-border));border-radius:0.375rem;background:transparent;color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:0.875rem;font-weight:500;margin-bottom:0.5rem;display:block;">Pincode</label>
+                <input type="text" id="checkout-pincode" style="width:100%;padding:0.75rem;border:1px solid rgb(var(--color-border));border-radius:0.375rem;background:transparent;color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;">
+              </div>
+            </div>
+            <div style="margin-bottom:1.5rem;">
+              <label style="font-size:0.875rem;font-weight:500;margin-bottom:0.75rem;display:block;">Payment gateway <span style="font-size:0.75rem;font-weight:400;color:rgb(var(--color-text-muted));">(mock mode — no real charge)</span></label>
+              <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:0.5rem;flex:1;padding:0.875rem 1rem;border:2px solid rgb(var(--color-border));border-radius:0.5rem;cursor:pointer;transition:border-color 0.2s;min-width:140px;">
+                <input type="radio" name="payment" value="stripe" checked> <span style="font-size:0.875rem;font-weight:600;">Stripe</span>
+                <span style="font-size:0.75rem;color:rgb(var(--color-text-muted));margin-left:auto;">Card · UPI</span>
+              </label>
+
+              </div>
+              <div id="stripe-card-wrapper" style="margin-top:1rem;padding:1rem;border:1px solid rgb(var(--color-border)/0.3);border-radius:0.5rem;display:none;">
+                <div style="font-size:0.8125rem;font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:rgb(var(--color-text-muted));">Card Details</div>
+                <div id="stripe-card-element" style="padding:0.75rem;border:1px solid rgb(var(--color-border)/0.4);border-radius:0.375rem;background:rgb(var(--color-input-bg));min-height:2.5rem;"></div>
+                <div id="stripe-card-errors" style="font-size:0.8125rem;color:#dc2626;margin-top:0.5rem;display:none;"></div>
+                <div style="font-size:0.75rem;color:rgb(var(--color-text-muted));margin-top:0.5rem;">Test card: 4242 4242 4242 4242 · Any future date · Any CVC</div>
+              </div>
+            </div>
+            <button id="place-order-btn" class="btn btn-primary" style="width:100%;padding:1rem;font-size:1rem;">Place order</button>
+            <p id="checkout-error" style="color:#dc2626;font-size:0.875rem;margin-top:0.75rem;display:none;"></p>
+          </div>
+          <div>
+            <h2 style="font-size:1.25rem;font-weight:600;margin-bottom:1.5rem;">Order summary</h2>
+            <div id="checkout-items" style="border:1px solid rgb(var(--color-border));border-radius:0.5rem;padding:1.25rem;"></div>
+            <div style="margin-top:1rem;padding:1.25rem;border:1px solid rgb(var(--color-border));border-radius:0.5rem;">
+              <div style="display:flex;justify-content:space-between;font-size:1.125rem;font-weight:600;">
+                <span>Total</span>
+                <span id="checkout-total"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="checkout-success" style="display:none;text-align:center;padding:3rem 0;max-width:500px;margin:0 auto;">
+          <svg style="width:4rem;height:4rem;margin:0 auto 1.5rem;display:block;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <h2 style="font-size:1.75rem;font-weight:700;margin-bottom:0.5rem;">Order confirmed!</h2>
+          <p style="color:rgb(var(--color-text-muted));margin-bottom:0.5rem;">Thank you for your purchase.</p>
+          <p style="color:rgb(var(--color-text-muted));margin-bottom:0.5rem;">Order ID: <strong id="success-order-id" style="color:rgb(var(--color-base-text));"></strong></p>
+          <div id="success-downloads" style="margin:1.5rem 0;text-align:left;display:inline-block;"></div>
+          <p style="font-size:0.875rem;color:rgb(var(--color-text-muted));margin-bottom:2rem;">A confirmation email will be sent to your email address.</p>
+          <a href="collections/all.html" class="btn btn-primary">Continue shopping</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <div id="app-overlay"></div>
+  <div id="app-mobile-menu"></div>
+  <div id="app-cart"></div>
+  <div id="app-search"></div>
+  <div id="app-cookie"></div>
+  <div id="app-scroll-top"></div>
+  <style>
+    .StripeElement { width:100%; padding:0.75rem; border:1px solid rgb(var(--color-border)/0.4); border-radius:0.375rem; background:rgb(var(--color-base-background)); box-sizing:border-box; }
+    .StripeElement--focus { border-color:rgb(var(--color-base-text)); }
+    .StripeElement--invalid { border-color:#dc2626; }
+  </style>
+  <script src="js/store.js"></script>
+  <script src="js/components.js"></script>
+  <script>Layout.init('');</script>
+  <script src="js/auth.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/payment.js"></script>
+  <script src="js/effects.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!window.__PRODUCTS__) Store.init();
+      if (!Auth.isLoggedIn()) {
+        document.getElementById('checkout-form').style.display = 'none';
+        document.getElementById('checkout-empty').innerHTML = '<div style="text-align:center;padding:4rem 1rem;"><h2>Please log in to checkout</h2><p style="color:rgb(var(--color-text-muted));margin-top:0.75rem;margin-bottom:1.5rem;">You need to be logged in to place an order.</p><button class="btn btn-primary" id="checkoutLoginBtn">Log In</button></div>';
+        document.getElementById('checkout-empty').style.display = 'block';
+        document.getElementById('checkoutLoginBtn').addEventListener('click', function() { sessionStorage.setItem('ab_auth_return', window.location.href); window.location.href = 'login.html'; });
+        return;
+      }
+
+      function renderCheckout() {
+        var items = Cart.getItems();
+        var container = document.getElementById('checkout-items');
+        var empty = document.getElementById('checkout-empty');
+        var form = document.getElementById('checkout-form');
+        var totalEl = document.getElementById('checkout-total');
+
+        if (!items || items.length === 0) {
+          empty.style.display = 'block';
+          form.style.display = 'none';
+          return;
+        }
+        empty.style.display = 'none';
+        form.style.display = 'grid';
+
+        var html = '';
+        var displayTotal = 0;
+        items.forEach(function(item) {
+          var itemCurr = item.currency || 'INR';
+          var lineTotal = item.price * item.quantity;
+          displayTotal += Locale.convert(lineTotal, itemCurr);
+          var imageSrc = resolveImageSrc ? resolveImageSrc(item.image) : ('assets/images/' + (item.image || 'placeholder.svg'));
+          html += '<div style="display:flex;gap:1rem;padding:0.75rem 0;border-bottom:1px solid rgb(var(--color-border) / 0.3);">' +
+            '<img src="' + imageSrc + '" alt="' + item.name + '" style="width:4rem;height:4rem;object-fit:cover;border-radius:0.375rem;flex-shrink:0;">' +
+            '<div style="flex:1;">' +
+              '<div style="font-weight:600;margin-bottom:0.25rem;">' + item.name + '</div>' +
+              '<div style="font-size:0.875rem;color:rgb(var(--color-text-muted));">Qty: ' + item.quantity + ' &times; ' + Cart.formatPrice(item.price, itemCurr) + '</div>' +
+            '</div>' +
+            '<div style="font-weight:600;">' + Cart.formatPrice(lineTotal, itemCurr) + '</div>' +
+          '</div>';
+        });
+        container.innerHTML = html;
+        totalEl.textContent = Cart.formatPrice(displayTotal);
+
+        var placeOrderBtn = document.getElementById('place-order-btn');
+
+        function confirmOrder(name, email, address, city, pincode, paymentMethod) {
+          var items = Cart.getItems();
+          var total = items.reduce(function(sum, item) { return sum + Locale.convert(item.price * item.quantity, item.currency || 'INR'); }, 0);
+          var order = {
+            id: 'AUROS-' + Date.now().toString(36).toUpperCase(),
+            date: new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            items: items,
+            total: total,
+            address: name + ', ' + email + ', ' + address + ', ' + city + ' - ' + pincode,
+            status: 'Confirmed',
+            payment: paymentMethod
+          };
+          var orders = JSON.parse(localStorage.getItem('ab_orders')) || [];
+          orders.unshift(order);
+          localStorage.setItem('ab_orders', JSON.stringify(orders));
+          localStorage.removeItem('ab_cart');
+          document.getElementById('checkout-form').style.display = 'none';
+          document.getElementById('checkout-success').style.display = 'block';
+          document.getElementById('success-order-id').textContent = order.id;
+          if (typeof Cart !== 'undefined') Cart.updateUI();
+          var downloadsHtml = '';
+          items.forEach(function(item) {
+            var fullProduct = null;
+            if (window.__PRODUCTS__) fullProduct = window.__PRODUCTS__.find(function(p) { return p.id === item.id; });
+            if (fullProduct && fullProduct.productFile) {
+              downloadsHtml += '<a href="' + fullProduct.productFile.data + '" download="' + fullProduct.productFile.name + '" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:0.5rem;margin:0.25rem;padding:0.5rem 1rem;font-size:0.875rem;border-radius:0.375rem;border:1px solid rgb(var(--color-border)/0.4);background:rgb(var(--color-base-background));color:rgb(var(--color-base-text));cursor:pointer;text-decoration:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download: ' + item.name + '</a>';
+            }
+          });
+          document.getElementById('success-downloads').innerHTML = downloadsHtml ? '<h3 style="font-size:1rem;font-weight:600;margin-bottom:0.75rem;">Your Downloads</h3>' + downloadsHtml : '';
+        }
+
+        placeOrderBtn.onclick = function() {
+          var errorEl = document.getElementById('checkout-error');
+          errorEl.style.display = 'none';
+          var name = document.getElementById('checkout-name').value.trim();
+          var email = document.getElementById('checkout-email').value.trim();
+          var address = document.getElementById('checkout-address').value.trim();
+          var city = document.getElementById('checkout-city').value.trim();
+          var pincode = document.getElementById('checkout-pincode').value.trim();
+          if (!name || !email || !address || !city || !pincode) {
+            errorEl.textContent = 'Please fill in all fields.';
+            errorEl.style.display = 'block';
+            this.classList.add('shake');
+            setTimeout(function() { this.classList.remove('shake'); }.bind(this), 500);
+            return;
+          }
+          this.textContent = 'Processing...';
+          this.disabled = true;
+          var self = this;
+          var paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || 'stripe';
+          var items = Cart.getItems();
+          var total = items.reduce(function(sum, item) { return sum + Locale.convert(item.price * item.quantity, item.currency || 'INR'); }, 0);
+          var currency = Locale.currentCurrency || 'INR';
+          Payment.process(paymentMethod, total, currency, { name: name, email: email },
+            function() {
+              confirmOrder(name, email, address, city, pincode, paymentMethod);
+            },
+            function(err) {
+              self.textContent = 'Place order';
+              self.disabled = false;
+              errorEl.textContent = err || 'Payment failed. Please try again.';
+              errorEl.style.display = 'block';
+            }
+          );
+        };
+
+        // Payment gateway toggle — show Stripe card element when Stripe is selected
+        var payRadios = document.querySelectorAll('input[name="payment"]');
+        for (var i = 0; i < payRadios.length; i++) {
+          payRadios[i].addEventListener('change', function() {
+            var wrapper = document.getElementById('stripe-card-wrapper');
+            wrapper.style.display = this.value === 'stripe' ? 'block' : 'none';
+            // Highlight selected label
+            document.querySelectorAll('input[name="payment"]').forEach(function(r) {
+              r.closest('label').style.borderColor = r.checked ? 'rgb(var(--color-base-text))' : 'rgb(var(--color-border))';
+            });
+            // Mount Stripe card element if not already done
+            if (this.value === 'stripe' && !Payment.stripeCardElement) {
+              Payment.mountStripeCard('stripe-card-element');
+            }
+          });
+        }
+        // Trigger initial state
+        var checked = document.querySelector('input[name="payment"]:checked');
+        if (checked) {
+          checked.closest('label').style.borderColor = 'rgb(var(--color-base-text))';
+          document.getElementById('stripe-card-wrapper').style.display = checked.value === 'stripe' ? 'block' : 'none';
+          if (checked.value === 'stripe' && !Payment.stripeCardElement) {
+            Payment.mountStripeCard('stripe-card-element');
+          }
+        }
+      }
+
+      Payment.init();
+      renderCheckout();
+
+      // Postal code autofill (global)
+      var pincodeEl = document.getElementById('checkout-pincode');
+      pincodeEl.addEventListener('input', function() {
+        clearTimeout(this._pt);
+        var code = this.value.trim();
+        if (code.length < 3) return;
+        this._pt = setTimeout(function() { lookupPostalCode(code); }, 600);
+      });
+      pincodeEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          clearTimeout(this._pt);
+          lookupPostalCode(this.value.trim());
+        }
+      });
+      function lookupPostalCode(code) {
+        if (!code || code.length < 3) return;
+        var cityEl = document.getElementById('checkout-city');
+        var addrEl = document.getElementById('checkout-address');
+        if (cityEl.value.trim() && addrEl.value.trim()) return;
+        fetch('https://nominatim.openstreetmap.org/search?postalcode=' + encodeURIComponent(code) + '&format=json&addressdetails=1&limit=1', {
+          headers: { 'User-Agent': 'AUROS/1.0' }
+        })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (!data || !data.length) return;
+            var addr = data[0].address;
+            var parts = [];
+            if (addr.city) parts.push(addr.city);
+            else if (addr.town) parts.push(addr.town);
+            else if (addr.village) parts.push(addr.village);
+            else if (addr.suburb) parts.push(addr.suburb);
+            if (addr.state && parts.indexOf(addr.state) === -1) parts.push(addr.state);
+            if (addr.country) parts.push(addr.country);
+            var location = parts.join(', ');
+            if (!cityEl.value.trim()) {
+              cityEl.value = addr.city || addr.town || addr.village || addr.suburb || addr.state || '';
+            }
+            if (!addrEl.value.trim()) {
+              var addrParts = [];
+              if (addr.road) addrParts.push(addr.road);
+              if (addr.house_number) addrParts.push(addr.house_number);
+              var street = addrParts.reverse().join(', ');
+              if (location) {
+                addrEl.value = street ? street + ', ' + location : location;
+              } else {
+                addrEl.value = street || code;
+              }
+            }
+          })
+          .catch(function() {});
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title>Admin Panel - AUROS</title>
+  <link href="css/theme.css" rel="stylesheet">
+  <link href="css/animations.css" rel="stylesheet">
+  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+  <style>
+    .admin-layout { display:grid; grid-template-columns:620px 1fr; gap:2.5rem; align-items:start; }
+    .admin-sidebar { position:sticky; top:2rem; }
+    .admin-main { min-width:0; }
+    .admin-form { background:rgb(var(--color-base-background)); border:1px solid rgb(var(--color-border)/0.3); border-radius:1rem; padding:2.25rem 2.5rem; }
+    .admin-form h3 { margin:0 0 1.5rem 0; font-size:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid rgb(var(--color-border)/0.2); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .form-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; }
+    .form-group { margin-bottom:1.75rem; }
+    .form-group label { display:block; font-size:0.8125rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:rgb(var(--color-text-muted)); margin-bottom:0.625rem; }
+    .form-group input,.form-group textarea,.form-group select { width:100%; padding:0.875rem 1.125rem; border:1px solid rgb(var(--color-border)/0.4); border-radius:0.5rem; background:rgb(var(--color-base-background)); color:rgb(var(--color-base-text)); font-size:0.9375rem; box-sizing:border-box; transition:border-color 0.2s; }
+    .form-group textarea { min-height:100px; resize:vertical; }
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus { outline:2px solid rgb(var(--color-base-text)); outline-offset:-1px; }
+    .product-list { display:flex; flex-direction:column; gap:0.75rem; }
+    .product-item { display:flex; align-items:center; gap:1rem; padding:0.875rem 1.25rem; background:rgb(var(--color-base-background)); border:1px solid rgb(var(--color-border)/0.3); border-radius:0.75rem; transition:border-color 0.2s; }
+    .product-item:hover { border-color:rgb(var(--color-border)/0.6); }
+    .product-item img { width:48px; height:48px; border-radius:0.375rem; object-fit:cover; background:#f0f0f0; }
+    .product-item-info { flex:1; min-width:0; }
+    .product-item-info .name { font-weight:600; font-size:0.9375rem; color:rgb(var(--color-base-text)); }
+    .product-item-info .meta { font-size:0.8125rem; color:rgb(var(--color-text-muted)); margin-top:0.125rem; }
+    .product-item-actions { display:flex; gap:0.5rem; flex-shrink:0; }
+    .btn-sm { padding:0.5rem 1rem; font-size:0.8125rem; border-radius:0.375rem; border:1px solid rgb(var(--color-border)/0.4); background:rgb(var(--color-base-background)); color:rgb(var(--color-base-text)); cursor:pointer; }
+    .btn-sm:hover { background:rgb(var(--color-base-button)); color:rgb(var(--color-base-button-text)); }
+    .btn-danger { border-color:#e11d48; color:#e11d48; }
+    .btn-danger:hover { background:#e11d48; color:white; }
+    .btn-primary { background:rgb(var(--color-base-button)); color:rgb(var(--color-base-button-text)); border-color:rgb(var(--color-base-button)); }
+    .search-bar { margin-bottom:1.5rem; }
+    .search-bar input { width:100%; padding:0.875rem 1.125rem; border:1px solid rgb(var(--color-border)/0.4); border-radius:0.5rem; background:rgb(var(--color-base-background)); color:rgb(var(--color-base-text)); font-size:0.9375rem; box-sizing:border-box; }
+    .tag-list { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.75rem; }
+    .tag { display:inline-flex; align-items:center; gap:0.25rem; padding:0.25rem 0.5rem; background:rgb(var(--color-border)/0.2); border-radius:0.25rem; font-size:0.75rem; }
+    .tag button { border:none; background:none; cursor:pointer; font-size:0.875rem; line-height:1; color:rgb(var(--color-text-muted)); padding:0; }
+    .tag button:hover { color:#e11d48; }
+    .empty-state { text-align:center; padding:3rem 1rem; color:rgb(var(--color-text-muted)); }
+    .badge-select { display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem; }
+    .badge-select label { display:flex; align-items:center; gap:0.375rem; font-size:0.875rem; cursor:pointer; text-transform:none; letter-spacing:normal; font-weight:400; padding:0.5rem 1rem; border:1px solid rgb(var(--color-border)/0.3); border-radius:0.375rem; transition:border-color 0.2s; }
+    .badge-select label:has(input:checked) { border-color:rgb(var(--color-base-text)); background:rgb(var(--color-base-text)/0.05); }
+    .badge-select input[type="radio"] { width:auto; }
+    .form-section-title { font-size:0.8125rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:rgb(var(--color-text-muted)); margin:2rem 0 1.25rem 0; padding-bottom:0.5rem; border-bottom:1px solid rgb(var(--color-border)/0.15); }
+    .toast { position:fixed; bottom:2rem; right:2rem; padding:0.75rem 1.25rem; border-radius:0.5rem; color:white; font-size:0.9375rem; z-index:9999; transform:translateY(100%); opacity:0; transition:transform 0.3s ease,opacity 0.3s ease; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { background:rgb(22 163 74); }
+    .toast.error { background:#e11d48; }
+    .collection-tabs { display:flex; gap:0.5rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .collection-tabs button { padding:0.5rem 1.25rem; border:1px solid rgb(var(--color-border)/0.4); border-radius:0.375rem; background:rgb(var(--color-base-background)); color:rgb(var(--color-base-text)); font-size:0.8125rem; cursor:pointer; transition:all 0.2s; }
+    .collection-tabs button:hover { border-color:rgb(var(--color-base-text)/0.5); }
+    .collection-tabs button.active { background:rgb(var(--color-base-button)); color:rgb(var(--color-base-button-text)); border-color:rgb(var(--color-base-button)); }
+    .checkbox-row { display:flex; gap:1.25rem; flex-wrap:wrap; }
+    .checkbox-row label { display:flex; align-items:center; gap:0.375rem; font-size:0.875rem; cursor:pointer; text-transform:none; letter-spacing:normal; font-weight:400; }
+    .checkbox-row input[type="checkbox"] { width:auto; }
+    .image-previews { display:flex; flex-wrap:wrap; gap:0.625rem; margin-top:0.75rem; }
+    .image-preview-item { position:relative; width:80px; height:80px; border-radius:0.5rem; overflow:hidden; border:1px solid rgb(var(--color-border)/0.3); }
+    .image-preview-item img { width:100%; height:100%; object-fit:cover; }
+    .image-preview-remove { position:absolute; top:2px; right:2px; width:20px; height:20px; border:none; border-radius:50%; background:rgba(0,0,0,0.6); color:white; font-size:14px; line-height:20px; text-align:center; cursor:pointer; padding:0; }
+    .image-preview-remove:hover { background:#e11d48; }
+    .image-preview-empty { font-size:0.8125rem; color:rgb(var(--color-text-muted)); }
+    input[type="file"] { width:100%; padding:0.75rem 1rem; border:1px dashed rgb(var(--color-border)/0.4); border-radius:0.5rem; background:rgb(var(--color-base-background)); color:rgb(var(--color-base-text)); font-size:0.9375rem; box-sizing:border-box; cursor:pointer; }
+    input[type="file"]:hover { border-color:rgb(var(--color-border)/0.8); }
+    .file-preview { display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem; padding:0.75rem 1rem; border:1px solid rgb(var(--color-border)/0.3); border-radius:0.5rem; background:rgb(var(--color-base-background)); }
+    .file-preview-icon { width:36px; height:36px; border-radius:0.375rem; background:rgb(var(--color-border)/0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .file-preview-info { flex:1; min-width:0; }
+    .file-preview-name { font-size:0.9375rem; font-weight:600; color:rgb(var(--color-base-text)); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .file-preview-size { font-size:0.75rem; color:rgb(var(--color-text-muted)); }
+    .file-preview-remove { width:24px; height:24px; border:none; border-radius:50%; background:rgba(0,0,0,0.6); color:white; font-size:16px; line-height:24px; text-align:center; cursor:pointer; padding:0; flex-shrink:0; }
+    .file-preview-remove:hover { background:#e11d48; }
+    .file-preview-empty { font-size:0.8125rem; color:rgb(var(--color-text-muted)); }
+    .live-preview { background:rgb(var(--color-base-background)); border:1px solid rgb(var(--color-border)/0.3); border-radius:1rem; overflow:hidden; }
+    .live-preview-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border-bottom:1px solid rgb(var(--color-border)/0.15); }
+    .live-preview-header h3 { margin:0; font-size:1.125rem; }
+    .live-preview-card { display:grid; grid-template-columns:1fr 1fr; gap:2rem; padding:1.5rem; }
+    .live-preview-gallery { }
+    .live-preview-main-img { width:100%; aspect-ratio:4/3; border-radius:0.75rem; overflow:hidden; background:rgb(var(--color-border)/0.1); display:flex; align-items:center; justify-content:center; }
+    .live-preview-main-img img { width:100%; height:100%; object-fit:cover; }
+    .preview-img-placeholder { color:rgb(var(--color-text-muted)); font-size:0.875rem; }
+    .live-preview-thumbs { display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap; }
+    .live-preview-thumbs .thumb { width:56px; height:56px; border-radius:0.375rem; overflow:hidden; border:2px solid transparent; cursor:default; }
+    .live-preview-thumbs .thumb img { width:100%; height:100%; object-fit:cover; }
+    .live-preview-thumbs .thumb.active { border-color:rgb(var(--color-base-text)); }
+    .live-preview-details { display:flex; flex-direction:column; gap:0.75rem; }
+    .preview-badge { display:inline-flex; }
+    .preview-badge span { display:inline-block; padding:0.2rem 0.6rem; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; border-radius:0.25rem; background:rgb(var(--color-base-text)); color:rgb(var(--color-base-background)); }
+    .preview-name { font-size:1.375rem; font-weight:700; line-height:1.3; color:rgb(var(--color-base-text)); }
+    .preview-price-row { display:flex; align-items:center; gap:0.75rem; }
+    .preview-price { font-size:1.5rem; font-weight:700; color:rgb(var(--color-base-text)); }
+    .preview-compare { font-size:1rem; color:rgb(var(--color-text-muted)); text-decoration:line-through; }
+    .preview-meta { font-size:0.8125rem; color:rgb(var(--color-text-muted)); }
+    .preview-desc { font-size:0.9375rem; line-height:1.6; color:rgb(var(--color-text-muted)); }
+    .preview-features-title { font-size:0.8125rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:rgb(var(--color-text-muted)); margin-top:0.25rem; }
+    .preview-features { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.375rem; }
+    .preview-features li { font-size:0.875rem; color:rgb(var(--color-text-muted)); padding-left:1.25rem; position:relative; }
+    .preview-features li::before { content:"\2713"; position:absolute; left:0; color:rgb(var(--color-base-text)); }
+    .preview-feature-empty { color:rgb(var(--color-text-muted)); opacity:0.5; }
+    .preview-feature-empty::before { content:"" !important; }
+    .preview-actions { display:flex; gap:0.75rem; margin-top:0.75rem; }
+  </style>
+</head>
+<body>
+  <a href="#main" style="position:absolute;left:1rem;top:0.5rem;z-index:100;background:#171717;color:white;padding:0.5rem 1rem;border-radius:0.375rem;transform:translateY(-100%);transition:transform 0.2s;" onfocus="this.style.transform='translateY(0)'" onblur="this.style.transform='translateY(-100%)'">Skip to content</a>
+  <div class="page-transition" id="pageTransition"></div>
+  <div id="app-header"></div>
+  <main id="main">
+    <section class="page-banner">
+      <div class="page-container">
+        <div class="breadcrumbs">
+          <a href="index.html">Home</a>
+          <span class="sep">/</span>
+          <span class="current">Admin Panel</span>
+        </div>
+        <h1>Admin Panel</h1>
+        <p>Manage your products</p>
+      </div>
+    </section>
+    <section class="collection-section">
+      <div class="page-container">
+        <div class="admin-layout">
+          <div class="admin-sidebar">
+            <div class="admin-form" id="product-form">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid rgb(var(--color-border)/0.2);">
+                <h3 id="form-title" style="margin:0;padding:0;border:none;">Add Product</h3>
+                <button type="button" class="btn btn-primary" id="btn-new-product" style="padding:0.5rem 1.25rem;font-size:0.875rem;white-space:nowrap;">+ New Product</button>
+              </div>
+              <input type="hidden" id="edit-id" value="">
+              <div class="form-section-title">Basic Information</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Product Name</label>
+                  <input type="text" id="field-name" placeholder="e.g. Cinematic LUTs Vol.1">
+                </div>
+                <div class="form-group">
+                  <label>Slug</label>
+                  <input type="text" id="field-slug" placeholder="e.g. cinematic-luts-vol1">
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:0.75rem;">
+                <label>Price</label>
+                <div style="display:flex;gap:0.75rem;">
+                  <input type="number" id="field-price" placeholder="Enter price" style="flex:1;padding:0.875rem 1.125rem;border:1px solid rgb(var(--color-border)/0.4);border-radius:0.5rem;background:rgb(var(--color-base-background));color:rgb(var(--color-base-text));font-size:1rem;box-sizing:border-box;">
+                  <select id="field-currency" style="width:120px;padding:0.875rem 0.75rem;border:1px solid rgb(var(--color-border)/0.4);border-radius:0.5rem;background:rgb(var(--color-base-background));color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;">
+                    <option value="INR">₹ INR</option>
+                    <option value="USD">$ USD</option>
+                    <option value="EUR">€ EUR</option>
+                    <option value="GBP">£ GBP</option>
+                    <option value="JPY">¥ JPY</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Discount Price</label>
+                  <input type="number" id="field-compare" placeholder="Leave blank if no discount">
+                </div>
+                <div class="form-group">
+                  <label>Next ID</label>
+                  <input type="number" id="field-id" placeholder="Auto">
+                </div>
+              </div>
+              <div class="form-section-title">Categorization</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Category</label>
+                  <input type="text" id="field-category" placeholder="e.g. Presets">
+                </div>
+                <div class="form-group">
+                  <label>Collection</label>
+                  <select id="field-collection">
+                    <option value="presets">Presets</option>
+                    <option value="motion-graphics">Motion Graphics</option>
+                    <option value="project-files">Project Files</option>
+                    <option value="free-assets">Free Assets</option>
+                    <option value="sound-effects">Sound Effects</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Badge</label>
+                <div class="badge-select">
+                  <label><input type="radio" name="badge" value="" checked> None</label>
+                  <label><input type="radio" name="badge" value="Best Seller"> Best Seller</label>
+                  <label><input type="radio" name="badge" value="Popular"> Popular</label>
+                  <label><input type="radio" name="badge" value="Free"> Free</label>
+                  <label><input type="radio" name="badge" value="Demo"> Demo</label>
+                </div>
+              </div>
+              <div class="form-section-title">Description &amp; Content</div>
+              <div class="form-group">
+                <label>Description</label>
+                <textarea id="field-desc" placeholder="Product description..." style="min-height:100px;"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Features (one per line)</label>
+                <textarea id="field-features" placeholder="50 cinematic LUTs&#10;Teal & orange palette&#10;Tutorial included"></textarea>
+              </div>
+              <div class="form-section-title">Media</div>
+              <div class="form-group">
+                <label>Product Images</label>
+                <input type="file" id="field-images-file" multiple accept="image/*">
+                <div style="margin-top:0.5rem;display:flex;gap:0.5rem;">
+                  <textarea id="field-image-urls" placeholder="Or paste image URLs, one per line&#10;https://example.com/image1.jpg&#10;https://example.com/image2.jpg" style="flex:1;min-height:60px;padding:0.5rem 0.75rem;border:1px dashed rgb(var(--color-border)/0.4);border-radius:0.5rem;background:rgb(var(--color-base-background));color:rgb(var(--color-base-text));font-size:0.8125rem;resize:vertical;box-sizing:border-box;"></textarea>
+                  <button type="button" class="btn-sm" id="btn-add-image-urls" style="align-self:flex-end;white-space:nowrap;">Add URLs</button>
+                </div>
+                <div class="image-previews" id="image-previews"><span class="image-preview-empty">No images uploaded yet</span></div>
+              </div>
+              <div class="form-group">
+                <label>Video URLs (one per line)</label>
+                <textarea id="field-videos" placeholder="https://example.com/video1.mp4"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Colors (one per line)</label>
+                <textarea id="field-colors" placeholder="#FF0000&#10;#00FF00&#10;#0000FF"></textarea>
+              </div>
+              <div class="form-section-title">Download File</div>
+              <div class="form-group">
+                <label>Product File (document, zip, etc.)</label>
+                <input type="file" id="field-product-file" accept=".zip,.rar,.pdf,.doc,.docx,.mp4,.mov,.zipx,.7z,.tar,.gz,.psd,.ai,.aep,.mogrt,.pptx,.xlsx,.txt">
+                <div id="product-file-preview"><span class="file-preview-empty">No file uploaded</span></div>
+              </div>
+              <div style="display:flex;gap:0.75rem;">
+                <button class="btn btn-primary" id="btn-save" style="flex:1;">Save Product</button>
+                <button class="btn btn-outline" id="btn-cancel" style="display:none;">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div class="admin-main">
+            <div class="search-bar" id="search-bar-wrap">
+              <input type="text" id="admin-search" placeholder="Search products...">
+            </div>
+            <div class="collection-tabs" id="collection-tabs"></div>
+            <div class="product-list" id="product-list"></div>
+            <div class="live-preview" id="livePreview" style="display:none;">
+              <div class="live-preview-header">
+                <h3>Product Preview</h3>
+                <button type="button" class="btn-sm" id="btn-close-preview" style="padding:0.375rem 0.75rem;font-size:0.8125rem;">&larr; Back to list</button>
+              </div>
+              <div class="live-preview-card">
+                <div class="live-preview-gallery">
+                  <div class="live-preview-main-img" id="preview-main-img">
+                    <div class="preview-img-placeholder">No image</div>
+                  </div>
+                  <div class="live-preview-thumbs" id="preview-thumbs"></div>
+                </div>
+                <div class="live-preview-details">
+                  <div class="preview-badge" id="preview-badge"></div>
+                  <div class="preview-name" id="preview-name">Product Name</div>
+                  <div class="preview-price-row" id="preview-price-row">
+                    <span class="preview-price" id="preview-price">₹0</span>
+                    <span class="preview-compare" id="preview-compare"></span>
+                  </div>
+                  <div class="preview-meta" id="preview-meta">Category &middot; Collection</div>
+                  <div class="preview-desc" id="preview-desc">Product description will appear here...</div>
+                  <div class="preview-features-title">Features</div>
+                  <ul class="preview-features" id="preview-features">
+                    <li class="preview-feature-empty">No features listed</li>
+                  </ul>
+                  <div class="preview-actions">
+                    <button class="btn btn-primary" style="flex:1;cursor:default;opacity:0.6;">Add to Cart</button>
+                    <button class="btn btn-secondary" style="flex:1;cursor:default;opacity:0.6;">Buy Now</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <div id="app-overlay"></div>
+  <div id="app-mobile-menu"></div>
+  <div id="app-cart"></div>
+  <div id="app-search"></div>
+  <div id="app-cookie"></div>
+  <div class="toast" id="toast"></div>
+  <script src="js/store.js"></script>
+  <script src="js/components.js"></script>
+  <script>Layout.init('');</script>
+  <script src="js/toast.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/mobile-menu.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/admin.js"></script>
+  <div id="app-scroll-top"></div>
+</body>
+</html>
