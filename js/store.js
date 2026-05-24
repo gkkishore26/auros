@@ -904,11 +904,16 @@ var Store = {
       return;
     }
     var timedOut = false;
-    var timer = setTimeout(function() { timedOut = true; self._loadFromLocal(callback); }, 3000);
+    var timer = setTimeout(function() { timedOut = true; console.warn('Supabase query timed out after 8s, falling back to localStorage'); self._loadFromLocal(callback); }, 8000);
     SupabaseClient.db.products().select('*').then(function(result) {
       if (timedOut) return;
       clearTimeout(timer);
-      if (result.error || !result.data || !result.data.length) {
+      if (result.error) {
+        console.warn('Supabase query error:', result.error);
+        self._loadFromLocal(callback);
+        return;
+      }
+      if (!result.data || !result.data.length) {
         self._loadFromLocal(callback);
         return;
       }

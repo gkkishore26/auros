@@ -473,8 +473,16 @@ var Admin = {
     var custom = this.getCustom();
     var editId = document.getElementById('edit-id').value;
     if (editId) {
+      // Try to find existing custom entry (for previously saved products)
       var existing = custom.find(function(p) { return String(p.id) === editId; });
-      if (existing) data.supabaseId = existing.supabaseId;
+      if (existing) {
+        data.supabaseId = existing.supabaseId;
+      } else {
+        // First-time edit of a built-in product — look up supabaseId from loaded products
+        var all = Admin.getAllProducts();
+        var loaded = all.find(function(p) { return String(p.id) === editId; });
+        if (loaded && loaded.supabaseId) data.supabaseId = loaded.supabaseId;
+      }
       var idx = custom.findIndex(function(p) { return String(p.id) === editId; });
       if (idx > -1) custom[idx] = data;
       else custom.push(data);

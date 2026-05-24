@@ -5,6 +5,20 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS collection TEXT;
 -- Enable real-time for products table
 ALTER PUBLICATION supabase_realtime ADD TABLE products;
 
+-- Allow anon key to read products (needed for cross-device sync)
+DROP POLICY IF EXISTS "anon_select" ON products;
+CREATE POLICY "anon_select" ON products FOR SELECT TO anon USING (true);
+
+-- Allow anon key to write products (admin saves)
+DROP POLICY IF EXISTS "anon_insert" ON products;
+CREATE POLICY "anon_insert" ON products FOR INSERT TO anon WITH CHECK (true);
+
+DROP POLICY IF EXISTS "anon_update" ON products;
+CREATE POLICY "anon_update" ON products FOR UPDATE TO anon USING (true);
+
+DROP POLICY IF EXISTS "anon_delete" ON products;
+CREATE POLICY "anon_delete" ON products FOR DELETE TO anon USING (true);
+
 -- Seed all built-in products
 INSERT INTO products (id, legacy_id, name, slug, description, price, compare_at_price, currency, category, collection, badge, features, images, in_stock)
 VALUES

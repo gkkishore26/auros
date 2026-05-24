@@ -127,14 +127,22 @@
     document.addEventListener('DOMContentLoaded', function() {
       var self = Auth;
 
+      var _pendingSupabaseRedirect = false;
+
       function redirectAfterLogin() {
         var returnUrl = sessionStorage.getItem('ab_auth_return');
-        if (returnUrl) {
-          sessionStorage.removeItem('ab_auth_return');
-          window.location.href = returnUrl;
-        } else {
-          window.location.href = 'account.html';
-        }
+        sessionStorage.removeItem('ab_auth_return');
+        window.location.href = returnUrl || 'account.html';
+      }
+
+      // For Supabase auth: wait for actual SIGNED_IN event before redirecting
+      if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+        SupabaseClient.auth.onAuthStateChange(function(event) {
+          if (event === 'SIGNED_IN' && _pendingSupabaseRedirect) {
+            _pendingSupabaseRedirect = false;
+            setTimeout(redirectAfterLogin, 100);
+          }
+        });
       }
 
       function showError(formId, msg) {
@@ -161,7 +169,8 @@
           var result = self.login(email, password);
           btn.classList.remove('loading');
           if (result.ok) {
-            redirectAfterLogin();
+            if (result.pending) { _pendingSupabaseRedirect = true; }
+            else { redirectAfterLogin(); }
           } else {
             showError('loginError', result.error);
           }
@@ -186,7 +195,8 @@
           var result = self.signup(name, email, password);
           btn.classList.remove('loading');
           if (result.ok) {
-            redirectAfterLogin();
+            if (result.pending) { _pendingSupabaseRedirect = true; }
+            else { redirectAfterLogin(); }
           } else {
             showError('signupError', result.error);
           }

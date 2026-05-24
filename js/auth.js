@@ -193,13 +193,31 @@ var Auth = {
   /* ── Protected actions ──────────────────────────── */
 
   require: function(callback) {
+    var self = this;
     if (this.isLoggedIn()) {
       if (callback) callback();
       return true;
     }
+    // Check if Supabase has a pending session (async restore in progress)
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+      SupabaseClient.auth.getSession().then(function(result) {
+        if (result.data && result.data.session) {
+          self.currentUser = { id: result.data.session.user.id, name: result.data.session.user.email, email: result.data.session.user.email };
+          self.updateUI();
+          if (callback) callback();
+        } else {
+          self._redirectToLogin();
+        }
+      });
+      return false;
+    }
+    this._redirectToLogin();
+    return false;
+  },
+
+  _redirectToLogin: function() {
     sessionStorage.setItem('ab_auth_return', window.location.href);
     window.location.href = 'login.html';
-    return false;
   },
 
   runPending: function() {
