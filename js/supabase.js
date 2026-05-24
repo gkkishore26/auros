@@ -55,5 +55,46 @@ var SupabaseClient = {
     orderItems: function() { return SupabaseClient.getClient().from('order_items'); },
     reviews: function() { return SupabaseClient.getClient().from('reviews'); },
     wishlist: function() { return SupabaseClient.getClient().from('wishlist_items'); }
+  },
+
+  /* ── Product Sync (Admin) ── */
+  upsertProduct: function(product) {
+    var client = SupabaseClient.getClient();
+    var data = {
+      legacy_id: typeof product.id === 'number' ? product.id : parseInt(product.id) || null,
+      name: product.name,
+      slug: product.slug,
+      description: product.description || '',
+      price: product.price || 0,
+      compare_at_price: product.comparePrice || null,
+      currency: product.currency || 'INR',
+      category: product.category || '',
+      collection: product.collection || 'uncategorized',
+      badge: product.badge || null,
+      features: product.features || [],
+      images: product.images || [],
+      in_stock: true
+    };
+    // If we have stored the Supabase UUID, update by UUID
+    if (product.supabaseId) {
+      return client.from('products').update(data).eq('id', product.supabaseId).select();
+    }
+    // Otherwise upsert by legacy_id
+    return client.from('products').upsert(data, { onConflict: 'legacy_id' }).select();
+  },
+
+  deleteProduct: function(id) {
+    var client = SupabaseClient.getClient();
+    return client.from('products').delete().eq('legacy_id', id);
+  },
+
+  subscribeProducts: function(callback) {
+    var client = SupabaseClient.getClient();
+    return client.channel('products-changes')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'products' },
+        function(payload) { if (callback) callback(payload); }
+      )
+      .subscribe();
   }
 };

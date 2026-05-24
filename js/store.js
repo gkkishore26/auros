@@ -887,10 +887,14 @@ var PRODUCTS_DATA = [
 
 var Store = {
   products: [],
+  _callback: null,
+  _realtimeSubscribed: false,
 
   init: function(callback) {
     var self = this;
+    self._callback = callback;
     self._loadFromSupabase(callback);
+    self._setupRealtime();
   },
 
   _loadFromSupabase: function(callback) {
@@ -908,21 +912,60 @@ var Store = {
         self._loadFromLocal(callback);
         return;
       }
-      var merged = result.data.slice();
+      // Map Supabase rows to frontend format, merging with PRODUCTS_DATA defaults
+      var merged = result.data.map(function(p) {
+        var builtIn = PRODUCTS_DATA.find(function(b) { return b.id === p.legacy_id; });
+        return {
+          id: p.legacy_id || p.id,
+          supabaseId: p.id,
+          legacy_id: p.legacy_id,
+          name: p.name,
+          slug: p.slug,
+          price: p.price,
+          comparePrice: p.compare_at_price,
+          currency: p.currency || 'INR',
+          category: p.category,
+          collection: p.collection || (p.category ? p.category.toLowerCase().replace(/\s+/g, '-') : 'uncategorized'),
+          description: p.description,
+          features: p.features || [],
+          images: p.images || [],
+          image: p.images && p.images.length > 0 ? p.images[0] : null,
+          badge: p.badge,
+          in_stock: p.in_stock !== false,
+          stock: p.in_stock !== false ? 'In Stock' : 'Out of Stock',
+          rating: builtIn ? builtIn.rating : 4.0,
+          reviewCount: builtIn ? builtIn.reviewCount : 0,
+          specs: builtIn ? builtIn.specs : ['Digital download'],
+          reviews: builtIn ? builtIn.reviews : [],
+          productFile: null
+        };
+      });
+      // Overlay custom products from localStorage
       try {
         var custom = JSON.parse(localStorage.getItem('ab_custom_products'));
         if (custom && custom.length) {
           custom.forEach(function(cp) {
-            var idx = merged.findIndex(function(p) { return String(p.id) === String(cp.id); });
-            if (idx > -1) merged[idx] = cp;
-            else merged.push(cp);
+            var idx = merged.findIndex(function(p) {
+              return (p.supabaseId && cp.supabaseId && String(p.supabaseId) === String(cp.supabaseId)) ||
+                     (p.legacy_id && !isNaN(Number(cp.id)) && Number(p.legacy_id) === Number(cp.id)) ||
+                     String(p.id) === String(cp.id);
+            });
+            if (idx > -1) {
+              // Preserve supabaseId from Supabase data
+              cp.supabaseId = merged[idx].supabaseId;
+              merged[idx] = cp;
+            } else merged.push(cp);
           });
         }
       } catch(e) {}
       try {
         var deleted = JSON.parse(localStorage.getItem('ab_deleted_products')) || [];
         if (deleted.length) {
-          merged = merged.filter(function(p) { return deleted.indexOf(p.id) === -1; });
+          merged = merged.filter(function(p) {
+            return deleted.indexOf(p.id) === -1 &&
+                   deleted.indexOf(String(p.id)) === -1 &&
+                   deleted.indexOf(p.legacy_id) === -1;
+          });
         }
       } catch(e) {}
       self.products = merged;
@@ -931,6 +974,20 @@ var Store = {
     }).catch(function() {
       if (!timedOut) { clearTimeout(timer); self._loadFromLocal(callback); }
     });
+  },
+
+  _setupRealtime: function() {
+    var self = this;
+    if (typeof SupabaseClient === 'undefined' || !SupabaseClient.getClient()) return;
+    if (self._realtimeSubscribed) return;
+    self._realtimeSubscribed = true;
+    try {
+      SupabaseClient.subscribeProducts(function() {
+        self._loadFromSupabase(self._callback);
+      });
+    } catch(e) {
+      console.warn('Realtime subscription failed, products will not auto-sync:', e);
+    }
   },
 
   _loadFromLocal: function(callback) {

@@ -397,16 +397,41 @@ var Admin = {
     var custom = this.getCustom();
     var editId = document.getElementById('edit-id').value;
     if (editId) {
+      var existing = custom.find(function(p) { return String(p.id) === editId; });
+      if (existing) data.supabaseId = existing.supabaseId;
       var idx = custom.findIndex(function(p) { return String(p.id) === editId; });
       if (idx > -1) custom[idx] = data;
       else custom.push(data);
     } else {
       custom.push(data);
     }
-    this.saveCustom(custom);
+    this.saveCustom(custom); // localStorage
+    this.saveToSupabase(data); // Supabase (async)
     this.clearForm();
     this.hidePreview();
     this.toast('Product saved!', 'success');
+  },
+
+  saveToSupabase: function(data) {
+    if (typeof SupabaseClient === 'undefined' || !SupabaseClient.getClient()) return;
+    SupabaseClient.upsertProduct(data).then(function(result) {
+      if (result.error) {
+        console.warn('Supabase sync failed:', result.error);
+        return;
+      }
+      // Store the Supabase UUID on the product for future updates
+      if (result.data && result.data.length && result.data[0].id) {
+        var uuid = result.data[0].id;
+        var custom = Admin.getCustom();
+        var match = custom.find(function(p) {
+          return String(p.id) === String(data.id) || (p.supabaseId && String(p.supabaseId) === uuid);
+        });
+        if (match && !match.supabaseId) {
+          match.supabaseId = uuid;
+          localStorage.setItem(Admin.STORAGE_KEY, JSON.stringify(custom));
+        }
+      }
+    });
   },
 
   edit: function(id) {
@@ -431,6 +456,12 @@ var Admin = {
     });
     this.toast('Product deleted', 'success');
     if (String(document.getElementById('edit-id').value) === sid) this.cancelEdit();
+    // Delete from Supabase
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+      SupabaseClient.deleteProduct(id).then(function(result) {
+        if (result.error) console.warn('Supabase delete sync failed:', result.error);
+      });
+    }
   },
 
   cancelEdit: function() {
