@@ -46,16 +46,6 @@ var Admin = {
       Admin.renderList();
       Admin.renderTabs();
     });
-    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
-      products.forEach(function(p) {
-        SupabaseClient.db.products().upsert({
-          id: p.id, name: p.name, slug: p.slug, price: p.price,
-          description: p.description, features: p.features, images: p.images,
-          category: p.category, badge: p.badge, currency: p.currency || 'INR',
-          in_stock: true
-        }, { onConflict: 'id' }).then(function() {});
-      });
-    }
   },
 
   getAllProducts: function() {
@@ -64,7 +54,8 @@ var Admin = {
 
   getNextId: function() {
     var products = this.getAllProducts();
-    return products.length > 0 ? Math.max.apply(null, products.map(function(p) { return p.id; })) + 1 : 1;
+    var nums = products.map(function(p) { return typeof p.id === 'number' ? p.id : 0; });
+    return nums.length > 0 ? Math.max.apply(null, nums) + 1 : 1;
   },
 
   renderTabs: function() {
@@ -124,10 +115,10 @@ var Admin = {
     container.innerHTML = html;
     var self = this;
     container.querySelectorAll('.btn-edit').forEach(function(btn) {
-      btn.addEventListener('click', function() { Admin.edit(parseInt(this.getAttribute('data-id'))); });
+      btn.addEventListener('click', function() { Admin.edit(this.getAttribute('data-id')); });
     });
     container.querySelectorAll('.btn-delete').forEach(function(btn) {
-      btn.addEventListener('click', function() { Admin.remove(parseInt(this.getAttribute('data-id'))); });
+      btn.addEventListener('click', function() { Admin.remove(this.getAttribute('data-id')); });
     });
   },
 
@@ -273,7 +264,7 @@ var Admin = {
     var price = parseInt(document.getElementById('field-price').value) || 0;
     var comparePrice = document.getElementById('field-compare').value ? parseInt(document.getElementById('field-compare').value) : null;
     return {
-      id: parseInt(document.getElementById('edit-id').value) || this.getNextId(),
+      id: document.getElementById('edit-id').value || this.getNextId(),
       name: document.getElementById('field-name').value.trim(),
       slug: document.getElementById('field-slug').value.trim(),
       price: price,
@@ -406,7 +397,7 @@ var Admin = {
     var custom = this.getCustom();
     var editId = document.getElementById('edit-id').value;
     if (editId) {
-      var idx = custom.findIndex(function(p) { return p.id === parseInt(editId); });
+      var idx = custom.findIndex(function(p) { return String(p.id) === editId; });
       if (idx > -1) custom[idx] = data;
       else custom.push(data);
     } else {
@@ -420,14 +411,15 @@ var Admin = {
 
   edit: function(id) {
     var all = this.getAllProducts();
-    var product = all.find(function(p) { return p.id === id; });
+    var product = all.find(function(p) { return String(p.id) === String(id); });
     if (product) this.populateForm(product);
   },
 
   remove: function(id) {
     if (!confirm('Delete this product?')) return;
+    var sid = String(id);
     var custom = this.getCustom();
-    custom = custom.filter(function(p) { return p.id !== id; });
+    custom = custom.filter(function(p) { return String(p.id) !== sid; });
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(custom));
     var deleted = JSON.parse(localStorage.getItem('ab_deleted_products')) || [];
     if (deleted.indexOf(id) === -1) deleted.push(id);
@@ -438,7 +430,7 @@ var Admin = {
       Admin.renderTabs();
     });
     this.toast('Product deleted', 'success');
-    if (document.getElementById('edit-id').value == id) this.cancelEdit();
+    if (String(document.getElementById('edit-id').value) === sid) this.cancelEdit();
   },
 
   cancelEdit: function() {

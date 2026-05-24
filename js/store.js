@@ -899,7 +899,11 @@ var Store = {
       self._loadFromLocal(callback);
       return;
     }
+    var timedOut = false;
+    var timer = setTimeout(function() { timedOut = true; self._loadFromLocal(callback); }, 3000);
     SupabaseClient.db.products().select('*').then(function(result) {
+      if (timedOut) return;
+      clearTimeout(timer);
       if (result.error || !result.data || !result.data.length) {
         self._loadFromLocal(callback);
         return;
@@ -909,7 +913,7 @@ var Store = {
         var custom = JSON.parse(localStorage.getItem('ab_custom_products'));
         if (custom && custom.length) {
           custom.forEach(function(cp) {
-            var idx = merged.findIndex(function(p) { return p.id === cp.id; });
+            var idx = merged.findIndex(function(p) { return String(p.id) === String(cp.id); });
             if (idx > -1) merged[idx] = cp;
             else merged.push(cp);
           });
@@ -925,7 +929,7 @@ var Store = {
       window.__PRODUCTS__ = merged;
       if (callback) callback(merged);
     }).catch(function() {
-      self._loadFromLocal(callback);
+      if (!timedOut) { clearTimeout(timer); self._loadFromLocal(callback); }
     });
   },
 
@@ -936,7 +940,7 @@ var Store = {
       var custom = JSON.parse(localStorage.getItem('ab_custom_products'));
       if (custom && custom.length) {
         custom.forEach(function(cp) {
-          var idx = merged.findIndex(function(p) { return p.id === cp.id; });
+          var idx = merged.findIndex(function(p) { return String(p.id) === String(cp.id); });
           if (idx > -1) merged[idx] = cp;
           else merged.push(cp);
         });
@@ -945,7 +949,7 @@ var Store = {
     try {
       var deleted = JSON.parse(localStorage.getItem('ab_deleted_products')) || [];
       if (deleted.length) {
-        merged = merged.filter(function(p) { return deleted.indexOf(p.id) === -1; });
+        merged = merged.filter(function(p) { return deleted.indexOf(p.id) === -1 && deleted.indexOf(String(p.id)) === -1; });
       }
     } catch(e) {}
     self.products = merged;
@@ -966,7 +970,7 @@ var Store = {
   },
 
   getById: function(id) {
-    return this.products.find(function(p) { return p.id === id; });
+    return this.products.find(function(p) { return String(p.id) === String(id); });
   },
 
   getByBadge: function(badge) {
