@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/create-payment-intent.js": {
+      "maxDuration": 10
+    }
+  }
+}
