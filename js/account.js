@@ -64,6 +64,20 @@ var Account = {
   },
 
   getOrders: function() {
+    var self = this;
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+      SupabaseClient.auth.getSession().then(function(sessionResult) {
+        if (sessionResult.data && sessionResult.data.session) {
+          var userId = sessionResult.data.session.user.id;
+          SupabaseClient.db.orders().select('*, order_items(*)').eq('user_id', userId).order('created_at', { ascending: false }).then(function(result) {
+            if (!result.error && result.data) {
+              self._supabaseOrders = result.data;
+              if (typeof self._renderOrders === 'function') self._renderOrders();
+            }
+          });
+        }
+      });
+    }
     var session = this.getSession();
     if (!session) return [];
     try {
@@ -92,6 +106,8 @@ var Account = {
     if (typeof Cart !== 'undefined') Cart.updateUI();
     return order;
   },
+
+  _supabaseOrders: null,
 
   updateUI: function() {
     var user = this.getCurrentUser();

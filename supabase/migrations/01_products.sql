@@ -1,7 +1,7 @@
 -- Create products table
 CREATE TABLE IF NOT EXISTS public.products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
+    name TEXT NOT NULL CHECK (length(trim(name)) > 0),
     slug TEXT UNIQUE NOT NULL,
     description TEXT,
     price NUMERIC(10, 2) NOT NULL,
@@ -31,9 +31,21 @@ $$ LANGUAGE plpgsql;
 -- Function to handle product slug before insert
 CREATE OR REPLACE FUNCTION public.handle_product_slug()
 RETURNS TRIGGER AS $$
+DECLARE
+    base_slug TEXT;
+    final_slug TEXT;
+    counter INTEGER := 0;
 BEGIN
     IF NEW.slug IS NULL OR NEW.slug = '' THEN
-        NEW.slug := public.generate_slug(NEW.name);
+        base_slug := public.generate_slug(NEW.name);
+        final_slug := base_slug;
+
+        WHILE EXISTS (SELECT 1 FROM public.products WHERE slug = final_slug AND (NEW.id IS NULL OR id != NEW.id)) LOOP
+            counter := counter + 1;
+            final_slug := base_slug || '-' || counter;
+        END LOOP;
+
+        NEW.slug := final_slug;
     END IF;
     RETURN NEW;
 END;
@@ -44,3 +56,18 @@ CREATE TRIGGER before_insert_products_slug
 BEFORE INSERT ON public.products
 FOR EACH ROW
 EXECUTE FUNCTION public.handle_product_slug();
+
+-- Function to automatically update updated_at column
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to update updated_at on every update
+CREATE TRIGGER set_updated_at
+BEFORE UPDATE ON public.products
+FOR EACH ROW
+EXECUTE FUNCTION public.update_updated_at_column();

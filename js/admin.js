@@ -46,6 +46,16 @@ var Admin = {
       Admin.renderList();
       Admin.renderTabs();
     });
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+      products.forEach(function(p) {
+        SupabaseClient.db.products().upsert({
+          id: p.id, name: p.name, slug: p.slug, price: p.price,
+          description: p.description, features: p.features, images: p.images,
+          category: p.category, badge: p.badge, currency: p.currency || 'INR',
+          in_stock: true
+        }, { onConflict: 'id' }).then(function() {});
+      });
+    }
   },
 
   getAllProducts: function() {

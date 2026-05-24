@@ -6,10 +6,44 @@ var Auth = {
   init: function() {
     if (this._initialized) return;
     this._initialized = true;
-    this.restoreSession();
+    this._initSupabase();
     this.updateUI();
     this.setupListeners();
     this.renderMenu();
+  },
+
+  _initSupabase: function() {
+    var self = this;
+    if (typeof SupabaseClient === 'undefined') {
+      this.restoreSession();
+      return;
+    }
+    SupabaseClient.auth.getSession().then(function(result) {
+      if (result.data && result.data.session) {
+        SupabaseClient.db.users().select('*').eq('id', result.data.session.user.id).single().then(function(u) {
+          if (u.data) {
+            self.currentUser = { id: u.data.id, name: u.data.display_name || u.data.email, email: u.data.email };
+            self.updateUI();
+          }
+        });
+      } else {
+        self.restoreSession();
+      }
+    }).catch(function() { self.restoreSession(); });
+
+    SupabaseClient.auth.onAuthStateChange(function(event, session) {
+      if (event === 'SIGNED_IN' && session) {
+        SupabaseClient.db.users().select('*').eq('id', session.user.id).single().then(function(u) {
+          if (u.data) {
+            self.currentUser = { id: u.data.id, name: u.data.display_name || u.data.email, email: u.data.email };
+            self.updateUI();
+          }
+        });
+      } else if (event === 'SIGNED_OUT') {
+        self.currentUser = null;
+        self.updateUI();
+      }
+    });
   },
 
   /* ── Session ─────────────────────────────────── */
@@ -57,6 +91,24 @@ var Auth = {
   },
 
   signup: function(name, email, password) {
+    var self = this;
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+      SupabaseClient.auth.signUp(email, password, { data: { full_name: name } }).then(function(result) {
+        if (result.error) {
+          if (document.getElementById('auth-error')) {
+            document.getElementById('auth-error').textContent = result.error.message;
+            document.getElementById('auth-error').style.display = 'block';
+          }
+          return { ok: false, error: result.error.message };
+        }
+        self.currentUser = { id: result.data.user.id, name: name, email: email };
+        self.saveSession();
+        self.updateUI();
+        self.runPending();
+        return { ok: true };
+      });
+      return { ok: true, pending: true };
+    }
     var users = this._getUsers();
     if (users.find(function(u) { return u.email === email; })) {
       return { ok: false, error: 'An account with this email already exists.' };
@@ -78,6 +130,29 @@ var Auth = {
   },
 
   login: function(email, password) {
+    var self = this;
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+      SupabaseClient.auth.signIn(email, password).then(function(result) {
+        if (result.error) {
+          if (document.getElementById('auth-error')) {
+            document.getElementById('auth-error').textContent = result.error.message;
+            document.getElementById('auth-error').style.display = 'block';
+          }
+          return { ok: false, error: result.error.message };
+        }
+        SupabaseClient.db.users().select('*').eq('id', result.data.user.id).single().then(function(u) {
+          if (u.data) {
+            self.currentUser = { id: u.data.id, name: u.data.display_name || u.data.email, email: u.data.email };
+          } else {
+            self.currentUser = { id: result.data.user.id, name: email, email: email };
+          }
+          self.saveSession();
+          self.updateUI();
+          self.runPending();
+        });
+      });
+      return { ok: true, pending: true };
+    }
     var users = this._getUsers();
     var found = users.find(function(u) { return u.email === email; });
     if (!found) {
@@ -94,7 +169,15 @@ var Auth = {
   },
 
   logout: function() {
-    this.clearSession();
+    var self = this;
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+      SupabaseClient.auth.signOut().then(function() {
+        self.currentUser = null;
+        self.updateUI();
+      });
+    } else {
+      this.clearSession();
+    }
     this.updateUI();
     var overlay = document.getElementById('authOverlay');
     if (overlay) overlay.classList.remove('active');

@@ -890,6 +890,47 @@ var Store = {
 
   init: function(callback) {
     var self = this;
+    self._loadFromSupabase(callback);
+  },
+
+  _loadFromSupabase: function(callback) {
+    var self = this;
+    if (typeof SupabaseClient === 'undefined' || !SupabaseClient.getClient()) {
+      self._loadFromLocal(callback);
+      return;
+    }
+    SupabaseClient.db.products().select('*').then(function(result) {
+      if (result.error || !result.data || !result.data.length) {
+        self._loadFromLocal(callback);
+        return;
+      }
+      var merged = result.data.slice();
+      try {
+        var custom = JSON.parse(localStorage.getItem('ab_custom_products'));
+        if (custom && custom.length) {
+          custom.forEach(function(cp) {
+            var idx = merged.findIndex(function(p) { return p.id === cp.id; });
+            if (idx > -1) merged[idx] = cp;
+            else merged.push(cp);
+          });
+        }
+      } catch(e) {}
+      try {
+        var deleted = JSON.parse(localStorage.getItem('ab_deleted_products')) || [];
+        if (deleted.length) {
+          merged = merged.filter(function(p) { return deleted.indexOf(p.id) === -1; });
+        }
+      } catch(e) {}
+      self.products = merged;
+      window.__PRODUCTS__ = merged;
+      if (callback) callback(merged);
+    }).catch(function() {
+      self._loadFromLocal(callback);
+    });
+  },
+
+  _loadFromLocal: function(callback) {
+    var self = this;
     var merged = PRODUCTS_DATA.slice();
     try {
       var custom = JSON.parse(localStorage.getItem('ab_custom_products'));

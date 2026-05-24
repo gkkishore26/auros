@@ -110,6 +110,8 @@
     .StripeElement--focus { border-color:rgb(var(--color-base-text)); }
     .StripeElement--invalid { border-color:#dc2626; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
   <script src="js/store.js"></script>
   <script src="js/components.js"></script>
   <script>Layout.init('');</script>
@@ -171,8 +173,48 @@
         function confirmOrder(name, email, address, city, pincode, paymentMethod) {
           var items = Cart.getItems();
           var total = items.reduce(function(sum, item) { return sum + Locale.convert(item.price * item.quantity, item.currency || 'INR'); }, 0);
+          var currency = Locale.currentCurrency || 'INR';
+          var orderNumber = 'AUROS-' + Date.now().toString(36).toUpperCase();
+          var userId = null;
+          if (typeof SupabaseClient !== 'undefined' && SupabaseClient.getClient()) {
+            SupabaseClient.auth.getSession().then(function(sessionResult) {
+              if (sessionResult.data && sessionResult.data.session) {
+                userId = sessionResult.data.session.user.id;
+                var orderPayload = {
+                  order_number: orderNumber,
+                  user_id: userId,
+                  status: 'confirmed',
+                  payment_method: paymentMethod,
+                  total: total,
+                  currency: currency,
+                  customer_name: name,
+                  customer_email: email,
+                  customer_address: address,
+                  customer_city: city,
+                  customer_pincode: pincode
+                };
+                SupabaseClient.db.orders().insert(orderPayload).select().then(function(orderResult) {
+                  if (!orderResult.error && orderResult.data && orderResult.data[0]) {
+                    var orderId = orderResult.data[0].id;
+                    var orderItemsPayload = items.map(function(item) {
+                      return {
+                        order_id: orderId,
+                        product_id: item.id,
+                        product_name: item.name,
+                        product_price: item.price,
+                        product_currency: item.currency || 'INR',
+                        quantity: item.quantity,
+                        product_file: null
+                      };
+                    });
+                    SupabaseClient.db.orderItems().insert(orderItemsPayload).then(function() {});
+                  }
+                });
+              }
+            });
+          }
           var order = {
-            id: 'AUROS-' + Date.now().toString(36).toUpperCase(),
+            id: orderNumber,
             date: new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
             items: items,
             total: total,
@@ -186,7 +228,7 @@
           localStorage.removeItem('ab_cart');
           document.getElementById('checkout-form').style.display = 'none';
           document.getElementById('checkout-success').style.display = 'block';
-          document.getElementById('success-order-id').textContent = order.id;
+          document.getElementById('success-order-id').textContent = orderNumber;
           if (typeof Cart !== 'undefined') Cart.updateUI();
           var downloadsHtml = '';
           items.forEach(function(item) {
