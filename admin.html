@@ -172,13 +172,10 @@
                 </div>
                 <div class="form-group">
                   <label>Collection</label>
-                  <select id="field-collection">
-                    <option value="presets">Presets</option>
-                    <option value="motion-graphics">Motion Graphics</option>
-                    <option value="project-files">Project Files</option>
-                    <option value="free-assets">Free Assets</option>
-                    <option value="sound-effects">Sound Effects</option>
-                  </select>
+                  <div style="display:flex;gap:0.5rem;">
+                    <select id="field-collection" style="flex:1;padding:0.875rem 1.125rem;border:1px solid rgb(var(--color-border)/0.4);border-radius:0.5rem;background:rgb(var(--color-base-background));color:rgb(var(--color-base-text));font-size:0.9375rem;box-sizing:border-box;"></select>
+                    <button type="button" class="btn-sm" id="btn-add-category" style="white-space:nowrap;flex-shrink:0;">+ Add Category</button>
+                  </div>
                 </div>
               </div>
               <div class="form-group">

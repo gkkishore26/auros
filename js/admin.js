@@ -8,6 +8,15 @@ var Admin = {
   previewVisible: false,
 
   init: function() {
+    if (this._initialized) {
+      // Re-render only (don't re-bind event listeners)
+      this.renderCollectionDropdown();
+      this.renderTabs();
+      this.renderList();
+      return;
+    }
+    this._initialized = true;
+    this.renderCollectionDropdown();
     this.renderTabs();
     this.renderList();
 
@@ -16,10 +25,12 @@ var Admin = {
     document.getElementById('admin-search').addEventListener('input', function() { Admin.searchTerm = this.value.toLowerCase(); Admin.renderList(); });
     document.getElementById('btn-new-product').addEventListener('click', function() { Admin.newProduct(); });
     document.getElementById('btn-close-preview').addEventListener('click', function() { Admin.cancelEdit(); });
+    document.getElementById('btn-add-category').addEventListener('click', function() { Admin.addCategory(); });
 
     var liveFields = ['field-name','field-slug','field-price','field-currency','field-compare','field-category','field-collection','field-desc','field-features','field-videos','field-colors'];
     liveFields.forEach(function(id) {
-      document.getElementById(id).addEventListener('input', function() { if (Admin.previewVisible) Admin.updatePreview(); });
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', function() { if (Admin.previewVisible) Admin.updatePreview(); });
     });
     var badgeRadios = document.getElementsByName('badge');
     for (var i = 0; i < badgeRadios.length; i++) {
@@ -35,17 +46,82 @@ var Admin = {
     document.getElementById('field-product-file').addEventListener('change', function(e) { Admin.handleProductFile(e); });
   },
 
+  addCategory: function() {
+    var name = prompt('Enter new category name (e.g. eBooks):');
+    if (!name || !name.trim()) return;
+    var label = name.trim();
+    var value = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    var saved = this.saveCustomCategory(value, label);
+    if (!saved) { this.toast('Category "' + label + '" already exists', 'error'); return; }
+    this.renderCollectionDropdown(value);
+    this.renderTabs();
+    this.toast('Category "' + label + '" added!', 'success');
+  },
+
   getCustom: function() {
     try { return JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || []; } catch(e) { return []; }
   },
 
   saveCustom: function(products) {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(products));
-    window.__PRODUCTS__ = null;
-    Store.init(function() {
-      Admin.renderList();
-      Admin.renderTabs();
+    this.refreshLocal();
+  },
+
+  refreshLocal: function() {
+    var merged = PRODUCTS_DATA.slice();
+    var saved = this.getCustom();
+    saved.forEach(function(cp) {
+      var idx = merged.findIndex(function(p) { return String(p.id) === String(cp.id); });
+      if (idx > -1) merged[idx] = cp;
+      else merged.push(cp);
     });
+    try {
+      var deleted = JSON.parse(localStorage.getItem('ab_deleted_products')) || [];
+      if (deleted.length) {
+        merged = merged.filter(function(p) { return deleted.indexOf(p.id) === -1 && deleted.indexOf(String(p.id)) === -1; });
+      }
+    } catch(e) {}
+    window.__PRODUCTS__ = merged;
+    Store.products = merged;
+    Admin.renderList();
+    Admin.renderTabs();
+  },
+
+  /* ── Custom Categories ── */
+  CATEGORIES_KEY: 'ab_categories',
+  DEFAULT_COLLECTIONS: [
+    { value: 'presets', label: 'Presets' },
+    { value: 'motion-graphics', label: 'Motion Graphics' },
+    { value: 'project-files', label: 'Project Files' },
+    { value: 'free-assets', label: 'Free Assets' },
+    { value: 'sound-effects', label: 'Sound Effects' }
+  ],
+
+  getCustomCategories: function() {
+    try { return JSON.parse(localStorage.getItem(this.CATEGORIES_KEY)) || []; } catch(e) { return []; }
+  },
+
+  saveCustomCategory: function(value, label) {
+    var cats = this.getCustomCategories();
+    if (cats.find(function(c) { return c.value === value; })) return false;
+    cats.push({ value: value, label: label });
+    localStorage.setItem(this.CATEGORIES_KEY, JSON.stringify(cats));
+    return true;
+  },
+
+  getAllCollections: function() {
+    return this.DEFAULT_COLLECTIONS.concat(this.getCustomCategories());
+  },
+
+  renderCollectionDropdown: function(selected) {
+    var select = document.getElementById('field-collection');
+    var all = this.getAllCollections();
+    var html = '';
+    all.forEach(function(c) {
+      var sel = c.value === selected ? ' selected' : '';
+      html += '<option value="' + c.value + '"' + sel + '>' + c.label + '</option>';
+    });
+    select.innerHTML = html;
   },
 
   getAllProducts: function() {
@@ -132,7 +208,7 @@ var Admin = {
     document.getElementById('field-compare').value = product.comparePrice || '';
     document.getElementById('field-id').value = product.id;
     document.getElementById('field-category').value = product.category || '';
-    document.getElementById('field-collection').value = product.collection || 'presets';
+    Admin.renderCollectionDropdown(product.collection || 'uncategorized');
     document.getElementById('field-desc').value = product.description || '';
     document.getElementById('field-features').value = (product.features || []).join('\n');
     this.currentImages = (product.images || []).slice();
@@ -161,7 +237,7 @@ var Admin = {
     document.getElementById('field-compare').value = '';
     document.getElementById('field-id').value = '';
     document.getElementById('field-category').value = '';
-    document.getElementById('field-collection').value = 'presets';
+    Admin.renderCollectionDropdown('presets');
     document.getElementById('field-desc').value = '';
     document.getElementById('field-features').value = '';
     this.currentImages = [];
@@ -431,6 +507,8 @@ var Admin = {
           localStorage.setItem(Admin.STORAGE_KEY, JSON.stringify(custom));
         }
       }
+    }).catch(function(err) {
+      console.warn('Supabase sync error:', err);
     });
   },
 
@@ -449,11 +527,7 @@ var Admin = {
     var deleted = JSON.parse(localStorage.getItem('ab_deleted_products')) || [];
     if (deleted.indexOf(id) === -1) deleted.push(id);
     localStorage.setItem('ab_deleted_products', JSON.stringify(deleted));
-    window.__PRODUCTS__ = null;
-    Store.init(function() {
-      Admin.renderList();
-      Admin.renderTabs();
-    });
+    this.refreshLocal();
     this.toast('Product deleted', 'success');
     if (String(document.getElementById('edit-id').value) === sid) this.cancelEdit();
     // Delete from Supabase
